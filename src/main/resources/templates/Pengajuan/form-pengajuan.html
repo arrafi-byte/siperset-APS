@@ -5,323 +5,726 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Pengajuan Sewa Aset - SIPERSET UB</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Impor Font Plus Jakarta Sans Sesuai Figma -->
+    <!-- Font Plus Jakarta Sans Sesuai Figma -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ub-navy: #0B213F;
-            --ub-navy-hover: #14335E;
-            --ub-gold: #F59E0B;
-            --ub-bg: #F8FAFC;
-            --ub-border: #E2E8F0;
+            --ub-navy: #0c2340;
+            --ub-navy-hover: #14335e;
+            --ub-gold: #eaaa00;
+            --ub-gold-hover: #d99b00;
+            --ub-bg: #f8fafc;
+            --ub-border: #e2e8f0;
+            --ub-text-dark: #0c2340;
+            --ub-text-muted: #64748b;
+            --ub-green: #15803d;
+            --ub-green-border: #86efac;
+            --ub-green-bg: #dcfce7;
+            --ub-red: #991b1b;
+            --ub-red-border: #fca5a5;
+            --ub-red-bg: #fee2e2;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--ub-bg);
-            color: #0F172A;
+            color: #1e293b;
             font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
-        /* Navbar Putih Sesuai Figma */
-        .navbar-figma {
-            background-color: #FFFFFF;
-            border-bottom: 1px solid var(--ub-border);
-            padding: 14px 0;
+
+        /* Site Header Figma (1:358) */
+        .site-header-figma {
+            background-color: #ffffff;
+            border-bottom: 2px solid var(--ub-border);
+            padding: 14px 84px;
+            width: 100%;
         }
-        .logo-box {
-            width: 38px;
-            height: 38px;
+        @media (max-width: 992px) {
+            .site-header-figma {
+                padding: 14px 24px;
+            }
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .emblem-box {
+            width: 44px;
+            height: 44px;
             background-color: var(--ub-navy);
             border: 2px solid var(--ub-gold);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--ub-gold);
-            font-weight: 800;
-            font-size: 0.9rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            padding: 4px;
         }
+
+        .emblem-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ub-navy);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ub-text-muted);
+            line-height: 1.2;
+        }
+
         .nav-link-figma {
             color: #334155;
-            font-weight: 500;
-            font-size: 0.92rem;
-            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 14px;
             border-radius: 8px;
             text-decoration: none;
-            transition: all 0.15s;
+            transition: all 0.15s ease-in-out;
         }
+
         .nav-link-figma:hover {
-            background-color: #F1F5F9;
+            background-color: #f1f5f9;
             color: var(--ub-navy);
         }
+
         .nav-link-figma.active {
-            background-color: #EFF6FF;
+            background-color: #eff6ff;
             color: var(--ub-navy);
             font-weight: 700;
         }
-        .btn-sso {
-            background-color: var(--ub-navy);
-            color: #FFFFFF;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 9px 20px;
+
+        /* Component Figma: Btn Masuk Varian 2 (Logged In, Node 77:67) */
+        .user-profile-badge {
+            background-color: #ffffff;
+            border: 1.5px solid var(--ub-border);
             border-radius: 8px;
-            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 16px 5px 8px;
             text-decoration: none;
-        }
-        .btn-sso:hover {
-            background-color: var(--ub-navy-hover);
-            color: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
-        /* Stepper Card Sesuai Figma */
-        .card-figma {
-            background-color: #FFFFFF;
-            border: 1px solid var(--ub-border);
-            border-radius: 14px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        .user-profile-badge:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
         }
-        .step-badge {
-            width: 34px;
-            height: 34px;
+
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            background-color: #0c2340;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #ffffff;
+            font-size: 14.5px;
             font-weight: 700;
-            font-size: 0.9rem;
-            background-color: #F1F5F9;
-            color: #64748B;
             flex-shrink: 0;
         }
-        .step-item.active .step-badge {
-            background-color: var(--ub-navy);
-            border: 2.5px solid var(--ub-gold);
-            color: var(--ub-gold);
-        }
-        .step-item.done .step-badge {
-            background-color: #16A34A;
-            color: #FFFFFF;
-        }
-        .step-sub {
-            font-size: 0.68rem;
+
+        .user-name-text {
+            color: #0c2340;
+            font-size: 14.5px;
             font-weight: 700;
-            letter-spacing: 0.04em;
-            color: #94A3B8;
-            text-transform: uppercase;
-        }
-        .step-item.active .step-sub { color: #64748B; }
-        .step-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #94A3B8;
-        }
-        .step-item.active .step-title,
-        .step-item.done .step-title { color: #0F172A; }
-        .step-line {
-            flex-grow: 1;
-            height: 1.5px;
-            background-color: #E2E8F0;
-            margin: 0 16px;
+            white-space: nowrap;
         }
 
-        /* Form Inputs & Alerts */
-        .form-label-figma {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #1E293B;
-            margin-bottom: 6px;
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1272px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
         }
-        .form-control-figma, .form-select-figma {
-            border: 1px solid #CBD5E1;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.92rem;
+
+        /* Page Hero */
+        .page-hero-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--ub-navy);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
         }
-        .form-control-figma:focus, .form-select-figma:focus {
-            border-color: var(--ub-navy);
-            box-shadow: 0 0 0 3px rgba(11, 33, 63, 0.1);
+
+        .page-hero-desc {
+            font-size: 14px;
+            color: var(--ub-text-muted);
+            margin-bottom: 24px;
         }
-        .alert-mint {
-            background-color: #ECFDF5;
-            border: 1px solid #A7F3D0;
-            color: #065F46;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 0.88rem;
-            font-weight: 500;
-        }
-        .alert-info-sky {
-            background-color: #E0F2FE;
-            border: 1px solid #BAE6FD;
-            color: #0369A1;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 0.88rem;
-        }
-        .dropzone-figma {
-            border: 1.5px dashed #CBD5E1;
-            border-radius: 10px;
-            background-color: #F8FAFC;
-            padding: 28px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .dropzone-figma:hover {
-            border-color: var(--ub-navy);
-        }
-        .summary-card-left {
-            background-color: #F8FAFC;
+
+        /* Stepper Figma (1:383) */
+        .stepper-card-figma {
+            background-color: #ffffff;
             border: 1px solid var(--ub-border);
             border-radius: 12px;
-            padding: 20px;
-        }
-        .summary-card-right {
-            background-color: #FFFBEB;
-            border: 1.5px solid #FCD34D;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .btn-navy-figma {
-            background-color: var(--ub-navy);
-            color: #FFFFFF;
-            font-weight: 600;
-            padding: 10px 22px;
-            border-radius: 8px;
-            border: none;
-        }
-        .btn-navy-figma:hover {
-            background-color: var(--ub-navy-hover);
-            color: #FFFFFF;
-        }
-        .btn-gold-submit {
-            background-color: var(--ub-gold);
-            color: #0F172A;
-            font-weight: 700;
-            padding: 10px 24px;
-            border-radius: 8px;
-            border: none;
-        }
-        .btn-gold-submit:hover {
-            background-color: #D97706;
-            color: #FFFFFF;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(12, 35, 64, 0.03);
         }
 
-        /* Footer Gelap Sesuai Figma */
-        .footer-figma {
-            background-color: #071324;
-            color: #94A3B8;
-            padding: 44px 0 28px;
-            margin-top: auto;
-            font-size: 0.86rem;
+        .step-node {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
-        .footer-figma h6 {
-            color: #FFFFFF;
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 800;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        /* State Active */
+        .step-node.active .step-circle {
+            background-color: var(--ub-navy);
+            border: 2px solid var(--ub-gold);
+            color: var(--ub-gold);
+        }
+        .step-node.active .step-subtext {
+            color: var(--ub-text-muted);
+        }
+        .step-node.active .step-maintext {
+            color: var(--ub-navy);
             font-weight: 700;
-            margin-bottom: 14px;
         }
+
+        /* State Done */
+        .step-node.done .step-circle {
+            background-color: var(--ub-green);
+            border: 2px solid var(--ub-green-border);
+            color: #ffffff;
+        }
+        .step-node.done .step-subtext {
+            color: var(--ub-text-muted);
+        }
+        .step-node.done .step-maintext {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        /* State Inactive */
+        .step-node.inactive {
+            opacity: 0.55;
+        }
+        .step-node.inactive .step-circle {
+            background-color: #f1f5f9;
+            border: 2px solid var(--ub-border);
+            color: #94a3b8;
+        }
+        .step-node.inactive .step-subtext,
+        .step-node.inactive .step-maintext {
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .step-subtext {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .step-maintext {
+            font-size: 13.5px;
+            line-height: 1.25;
+        }
+
+        .step-divider-line {
+            flex: 1 1 0%;
+            height: 2px;
+            background-color: var(--ub-border);
+            margin: 0 16px;
+            min-width: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .stepper-card-figma {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 16px;
+            }
+            .step-divider-line {
+                display: none;
+            }
+        }
+
+        /* Form Card Container (1:411) */
+        .form-card-figma {
+            background-color: #ffffff;
+            border: 1px solid var(--ub-border);
+            border-radius: 12px;
+            padding: 36px 40px;
+            box-shadow: 0 1px 3px rgba(12, 35, 64, 0.03);
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .form-card-figma {
+                padding: 24px 18px;
+            }
+        }
+
+        .section-header-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ub-navy);
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .section-header-desc {
+            font-size: 13.5px;
+            color: var(--ub-text-muted);
+            margin-bottom: 24px;
+        }
+
+        .field-label-figma {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 7px;
+            display: block;
+        }
+
+        .field-input-figma, .field-select-figma {
+            width: 100%;
+            border: 1.5px solid var(--ub-border);
+            border-radius: 8px;
+            padding: 11px 15px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background-color: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .field-input-figma:focus, .field-select-figma:focus {
+            outline: none;
+            border-color: var(--ub-navy);
+            box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.08);
+        }
+
+        /* Alerts */
+        .alert-mint-figma {
+            background-color: var(--ub-green-bg);
+            border: 1px solid var(--ub-green-border);
+            color: #166534;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 13.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .alert-danger-figma {
+            background-color: var(--ub-red-bg);
+            border: 1.5px solid var(--ub-red-border);
+            color: var(--ub-red);
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .alert-sky-figma {
+            background-color: #e0f2fe;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 13.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        /* Buttons Sesuai Figma */
+        .btn-navy-figma {
+            background-color: var(--ub-navy);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.15s;
+        }
+
+        .btn-navy-figma:hover {
+            background-color: var(--ub-navy-hover);
+            color: #ffffff;
+        }
+
+        .btn-outline-figma {
+            background-color: transparent;
+            border: 1.5px solid var(--ub-border);
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-outline-figma:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .btn-gold-figma {
+            background-color: var(--ub-gold);
+            color: var(--ub-navy);
+            font-weight: 800;
+            font-size: 14.5px;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 4px rgba(234, 170, 0, 0.2);
+        }
+
+        .btn-gold-figma:hover {
+            background-color: var(--ub-gold-hover);
+            color: #000000;
+        }
+
+        /* Dropzone Box & Drag-and-Drop */
+        .dropzone-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .dropzone-box:hover {
+            border-color: var(--ub-navy);
+            background-color: #f1f5f9;
+        }
+
+        .dropzone-box.dragover {
+            border-color: var(--ub-navy) !important;
+            background-color: #eff6ff !important;
+            box-shadow: 0 0 0 4px rgba(12, 35, 64, 0.08);
+        }
+
+        .dropzone-icon {
+            font-size: 26px;
+            color: var(--ub-navy);
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        /* Komponen Figma Variant 2: Upload: Surat Pengantar Dekanat (Node 83:69) */
+        .uploaded-card-figma {
+            background-color: #dcfce7;
+            border: 1.5px solid #86efac;
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .file-icon-square {
+            width: 44px;
+            height: 44px;
+            background-color: #0c2340;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .file-info-col {
+            flex: 1 1 0%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .file-title-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0c2340;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.25;
+        }
+
+        .file-status-text {
+            font-size: 13px;
+            color: #15803d;
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
+        .btn-remove-file {
+            background-color: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #c72929;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .btn-remove-file:hover {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+
+        /* Review Cards Figma (Pengajuan 4) */
+        .summary-card-left {
+            background-color: #f8fafc;
+            border: 1px solid var(--ub-border);
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+        }
+
+        .summary-card-right {
+            background-color: #fff8e6;
+            border: 1.5px solid var(--ub-gold);
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+        }
+
+        /* Footer Figma (1:446) */
+        .footer-figma {
+            background-color: #061528;
+            border-top: 3px solid var(--ub-gold);
+            color: #94a3b8;
+            padding: 48px 84px 32px;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        @media (max-width: 992px) {
+            .footer-figma {
+                padding: 40px 24px 24px;
+            }
+        }
+
+        .footer-figma h6 {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-figma p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
         .footer-figma a {
-            color: #94A3B8;
+            color: #94a3b8;
+            font-size: 13px;
             text-decoration: none;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            transition: color 0.15s;
         }
-        .footer-figma a:hover { color: #FFFFFF; }
+
+        .footer-figma a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(148, 163, 184, 0.15);
+            padding-top: 24px;
+            margin-top: 32px;
+            font-size: 12.5px;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar-figma">
-    <div class="container d-flex flex-wrap justify-content-between align-items-center">
-        <a th:href="@{/pengajuan}" class="d-flex align-items-center text-decoration-none gap-2">
-            <div class="logo-box" style="overflow: hidden; padding: 3px;">
+<!-- SITE HEADER FIGMA -->
+<header class="site-header-figma">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <!-- Brand -->
+        <a th:href="@{/pengajuan/tambah}" class="brand-container">
+            <div class="emblem-box">
                 <img th:src="@{/images/logo-ub.png}" alt="Logo UB"
-                     style="width: 100%; height: 100%; object-fit: contain;"
-                     onerror="this.style.display='none'; this.parentElement.innerText='UB';">
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--ub-gold);font-weight:800;font-size:14px;\'>UB</span>';">
+            </div>
+            <div>
+                <div class="brand-title">SIPERSET UB</div>
+                <div class="brand-subtitle">Sistem Informasi Penyewaan Aset Universitas Brawijaya</div>
             </div>
         </a>
 
+        <!-- Main Nav -->
         <nav class="d-none d-md-flex align-items-center gap-1">
-            <a th:href="@{/pengajuan}" class="nav-link-figma">Beranda</a>
-            <a th:href="@{/pengajuan}" class="nav-link-figma">Katalog &amp; Jadwal</a>
+            <a th:href="@{/pengajuan/tambah}" class="nav-link-figma">Beranda</a>
+            <a th:href="@{/pengajuan/tambah}" class="nav-link-figma">Katalog &amp; Jadwal</a>
             <a th:href="@{/pengajuan/tambah}" class="nav-link-figma active">Ajukan Sewa</a>
             <a th:href="@{/pengajuan}" class="nav-link-figma">Lacak Pengajuan</a>
         </nav>
 
-        <a th:href="@{/pengajuan}" class="btn-sso">Masuk / SSO UB</a>
+        <!-- Header Actions: Component Btn Masuk Varian 2 Figma (Node 77:67) -->
+        <div class="user-profile-badge" title="Akun Pengguna Terautentikasi">
+            <div class="user-avatar-circle">M</div>
+            <span class="user-name-text">mahasiswa_ub</span>
+        </div>
     </div>
 </header>
 
-<!-- MAIN CONTENT -->
-<main class="container py-4 my-2" style="max-width: 1040px;">
+<!-- MAIN WRAPPER -->
+<main class="main-wrapper">
+    <!-- Page Hero -->
     <div class="mb-4">
-        <h2 class="fw-bold mb-1" style="color: var(--ub-navy); font-size: 1.75rem;">Formulir Pengajuan Sewa Aset</h2>
-        <p class="text-muted mb-0">Lengkapi 4 langkah berikut untuk mengajukan peminjaman fasilitas kampus.</p>
+        <h1 class="page-hero-title">Formulir Pengajuan Sewa Aset</h1>
+        <p class="page-hero-desc">Lengkapi 4 langkah berikut untuk mengajukan peminjaman fasilitas kampus berstandar resmi.</p>
     </div>
 
     <!-- Alert Error Backend (Jadwal Bentrok / Validasi Gagal) -->
-    <div th:if="${pesanError}" class="alert alert-danger d-flex align-items-center shadow-sm mb-4" role="alert">
+    <div th:if="${pesanError}" class="alert alert-danger d-flex align-items-center shadow-sm mb-4" role="alert" style="border-radius: 8px;">
         <div>
             <strong>Gagal Mengirim Pengajuan:</strong> <span th:text="${pesanError}"></span>
         </div>
     </div>
 
-    <!-- STEPPER 4 LANGKAH -->
-    <div class="card-figma px-4 py-3 mb-4">
-        <div class="d-flex align-items-center justify-content-between">
-            <div id="ind-1" class="step-item active d-flex align-items-center gap-2" style="cursor:pointer;" onclick="goToStep(1)">
-                <div class="step-badge" id="badge-1">1</div>
-                <div>
-                    <div class="step-sub">LANGKAH 1</div>
-                    <div class="step-title">Pilih Aset &amp; Jadwal</div>
-                </div>
+    <!-- STEPPER 4 LANGKAH FIGMA (1:383) -->
+    <div class="stepper-card-figma">
+        <!-- Step 1 -->
+        <div id="node-1" class="step-node active" onclick="goToStep(1)">
+            <div class="step-circle" id="circle-1">1</div>
+            <div>
+                <div class="step-subtext">LANGKAH 1</div>
+                <div class="step-maintext">Pilih Aset &amp; Jadwal</div>
             </div>
-            <div class="step-line d-none d-md-block"></div>
+        </div>
 
-            <div id="ind-2" class="step-item d-flex align-items-center gap-2" style="cursor:pointer;" onclick="goToStep(2)">
-                <div class="step-badge" id="badge-2">2</div>
-                <div>
-                    <div class="step-sub">LANGKAH 2</div>
-                    <div class="step-title">Identitas &amp; Acara</div>
-                </div>
+        <div class="step-divider-line"></div>
+
+        <!-- Step 2 -->
+        <div id="node-2" class="step-node inactive" onclick="goToStep(2)">
+            <div class="step-circle" id="circle-2">2</div>
+            <div>
+                <div class="step-subtext">LANGKAH 2</div>
+                <div class="step-maintext">Identitas &amp; Acara</div>
             </div>
-            <div class="step-line d-none d-md-block"></div>
+        </div>
 
-            <div id="ind-3" class="step-item d-flex align-items-center gap-2" style="cursor:pointer;" onclick="goToStep(3)">
-                <div class="step-badge" id="badge-3">3</div>
-                <div>
-                    <div class="step-sub">LANGKAH 3</div>
-                    <div class="step-title">Unggah Proposal</div>
-                </div>
+        <div class="step-divider-line"></div>
+
+        <!-- Step 3 -->
+        <div id="node-3" class="step-node inactive" onclick="goToStep(3)">
+            <div class="step-circle" id="circle-3">3</div>
+            <div>
+                <div class="step-subtext">LANGKAH 3</div>
+                <div class="step-maintext">Unggah Proposal</div>
             </div>
-            <div class="step-line d-none d-md-block"></div>
+        </div>
 
-            <div id="ind-4" class="step-item d-flex align-items-center gap-2" style="cursor:pointer;" onclick="goToStep(4)">
-                <div class="step-badge" id="badge-4">4</div>
-                <div>
-                    <div class="step-sub">LANGKAH 4</div>
-                    <div class="step-title">Kalkulasi Biaya</div>
-                </div>
+        <div class="step-divider-line"></div>
+
+        <!-- Step 4 -->
+        <div id="node-4" class="step-node inactive" onclick="goToStep(4)">
+            <div class="step-circle" id="circle-4">4</div>
+            <div>
+                <div class="step-subtext">LANGKAH 4</div>
+                <div class="step-maintext">Kalkulasi Biaya</div>
             </div>
         </div>
     </div>
 
     <!-- FORM CONTAINER -->
     <form th:action="@{/pengajuan/simpan}" th:object="${pengajuan}" method="post" enctype="multipart/form-data">
-        <div class="card-figma p-4 p-md-5">
+        <div class="form-card-figma">
 
             <!-- ================= STEP 1: PILIH ASET & JADWAL ================= -->
-            <div id="step-1">
-                <h5 class="fw-bold mb-4" style="color: var(--ub-navy);">1. Pemilihan Fasilitas &amp; Pengecekan Ketersediaan Jadwal</h5>
+            <div id="step-panel-1">
+                <div class="section-header-title">1. Pemilihan Fasilitas &amp; Pengecekan Ketersediaan Jadwal</div>
+                <div class="section-header-desc">Sistem memvalidasi jadwal secara otomatis untuk mencegah bentrok pemakaian fasilitas.</div>
 
-                <div class="mb-3">
-                    <label class="form-label-figma">Pilih Fasilitas / Gedung *</label>
-                    <select id="selectAset" th:field="*{idAset}" class="form-select form-select-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
+                <div class="mb-4">
+                    <label class="field-label-figma">Pilih Fasilitas / Gedung *</label>
+                    <select id="selectAset" th:field="*{idAset}" class="field-select-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
                         <option value="" data-nama="-" data-tarif="0">-- Pilih Gedung / Fasilitas Universitas Brawijaya --</option>
                         <option th:each="a : ${daftarAset}"
                                 th:value="${a.idAset}"
@@ -332,149 +735,191 @@
                     <div class="invalid-feedback" th:errors="*{idAset}"></div>
                 </div>
 
-                <div class="row g-3 mb-3">
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label-figma">Tanggal Mulai Peminjaman *</label>
-                        <input type="date" id="tglMulai" th:field="*{tanggalMulaiSewa}" class="form-control form-control-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
+                        <label class="field-label-figma">Tanggal Mulai Peminjaman *</label>
+                        <input type="date" id="tglMulai" th:field="*{tanggalMulaiSewa}" class="field-input-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
                         <div class="invalid-feedback" th:errors="*{tanggalMulaiSewa}"></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-figma">Tanggal Selesai Peminjaman *</label>
-                        <input type="date" id="tglSelesai" th:field="*{tanggalSelesaiSewa}" class="form-control form-control-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
+                        <label class="field-label-figma">Tanggal Selesai Peminjaman *</label>
+                        <input type="date" id="tglSelesai" th:field="*{tanggalSelesaiSewa}" class="field-input-figma" th:errorclass="is-invalid" onchange="updateKalkulasi()">
                         <div class="invalid-feedback" th:errors="*{tanggalSelesaiSewa}"></div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label-figma">Sesi Penggunaan *</label>
-                        <select id="sesiPenggunaan" class="form-select form-select-figma">
+                        <label class="field-label-figma">Sesi Penggunaan *</label>
+                        <select id="sesiPenggunaan" class="field-select-figma">
                             <option value="Full Day (07.00 - 21.00 WIB)">Full Day (07.00 - 21.00 WIB)</option>
                             <option value="Sesi Pagi - Siang (07.00 - 14.00 WIB)">Sesi Pagi - Siang (07.00 - 14.00 WIB)</option>
                             <option value="Sesi Siang - Malam (14.00 - 21.00 WIB)">Sesi Siang - Malam (14.00 - 21.00 WIB)</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-figma">Kategori Pemohon *</label>
-                        <select id="kategoriPemohon" class="form-select form-select-figma" onchange="updateKalkulasi()">
-                            <option value="civitas">Civitas Academica UB (Internal — Subsidi 30%)</option>
+                        <label class="field-label-figma">Kategori Pemohon *</label>
+                        <!-- Pilihan bersih tanpa tulisan diskon, notif subsidi hanya muncul saat pilih civitas -->
+                        <select id="kategoriPemohon" name="kategoriPemohon" class="field-select-figma" onchange="updateKalkulasi()">
+                            <option value="">-- Pilih Kategori Pemohon --</option>
+                            <option value="civitas">Civitas Academica UB (Internal)</option>
                             <option value="eksternal">Peminjam Eksternal / Umum / Instansi</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- 2 Kotak Hijau Persis Seperti Pengajuan 1.png -->
-                <div id="boxSubsidi" class="alert-mint mb-3">
-                    ✓ Civitas Academica UB berhak atas subsidi pemotongan biaya kemitraan kampus sebesar 30%.
-                </div>
-                <div class="alert-mint mb-4">
-                    <span id="statusJadwalText">Jadwal Bebas &amp; Tersedia! Pilih tanggal untuk menghitung durasi peminjaman. (Catatan uji bentrok: AST-01 penuh pada 10–12 Des 2026).</span>
+                <!-- Notif Subsidi (Hanya Muncul Saat Kategori = Civitas/Internal) -->
+                <div id="boxSubsidi" class="alert-mint-figma" style="display: none;">
+                    <span>✓</span>
+                    <div>Civitas Academica UB berhak atas subsidi pemotongan biaya kemitraan kampus sebesar 30%.</div>
                 </div>
 
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn-navy-figma" onclick="goToStep(2)">Lanjut ke Identitas &amp; Acara &rarr;</button>
+                <!-- Notif Ketersediaan Jadwal (Hanya Muncul Begitu Tanggal Dipilih: Hijau jika Tersedia, Merah jika Bentrok/Salah) -->
+                <div id="boxStatusJadwal" style="display: none;">
+                    <div id="alertJadwalContent" class="alert-mint-figma">
+                        <span id="alertJadwalIcon">✓</span>
+                        <div id="statusJadwalText"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn-navy-figma" onclick="goToStep(2)">Lanjut ke Identitas &amp; Acara ➔</button>
                 </div>
             </div>
 
             <!-- ================= STEP 2: IDENTITAS & ACARA ================= -->
-            <div id="step-2" style="display: none;">
-                <h5 class="fw-bold mb-1" style="color: var(--ub-navy);">2. Identitas Penanggung Jawab &amp; Deskripsi Acara</h5>
-                <p class="text-muted small mb-4">Data ini dicatat dalam entitas Pengajuan dan Persetujuan sebagai basis verifikasi berkas.</p>
+            <div id="step-panel-2" style="display: none;">
+                <div class="section-header-title">2. Identitas Penanggung Jawab &amp; Deskripsi Acara</div>
+                <div class="section-header-desc">Data ini dicatat dalam entitas Pengajuan dan Persetujuan sebagai basis verifikasi berkas.</div>
 
-                <div class="row g-3 mb-3">
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label-figma">Nama Lengkap Penanggung Jawab *</label>
-                        <input type="text" id="inpNama" class="form-control form-control-figma" value="Muhamad Hilal Arrafi" onkeyup="updateKalkulasi()">
+                        <label class="field-label-figma">Nama Lengkap Penanggung Jawab *</label>
+                        <input type="text" id="inpNama" class="field-input-figma" value="" placeholder="Masukkan nama lengkap penanggung jawab" onkeyup="updateKalkulasi()">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-figma">Organisasi / Lembaga / Fakultas *</label>
-                        <input type="text" id="inpOrg" class="form-control form-control-figma" value="Himpunan Mahasiswa Informatika (FILKOM UB)" onkeyup="updateKalkulasi()">
+                        <label class="field-label-figma">Organisasi / Lembaga / Fakultas *</label>
+                        <input type="text" id="inpOrg" class="field-input-figma" value="" placeholder="Contoh: Himpunan Mahasiswa / BEM / Lembaga / Instansi" onkeyup="updateKalkulasi()">
                     </div>
                 </div>
 
-                <div class="row g-3 mb-3">
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label-figma">Nomor Induk (NIM / NIP / NIK) *</label>
-                        <input type="text" class="form-control form-control-figma" value="255150200111047">
+                        <label class="field-label-figma">Nomor Induk (NIM / NIP / NIK) *</label>
+                        <input type="text" id="inpNomorInduk" class="field-input-figma" value="" placeholder="NIM / NIP / NIK">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-figma">Nomor WhatsApp Aktif *</label>
-                        <input type="text" class="form-control form-control-figma" value="081234567890">
-                    </div>
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label-figma">Alamat Email Resmi *</label>
-                        <input type="email" class="form-control form-control-figma" value="hilalarrafi@student.ub.ac.id">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label-figma">Estimasi Kehadiran Peserta (Orang) *</label>
-                        <input type="number" class="form-control form-control-figma" value="350">
+                        <label class="field-label-figma">Nomor WhatsApp Aktif *</label>
+                        <input type="text" id="inpWhatsApp" class="field-input-figma" value="" placeholder="Contoh: 081234567890">
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label-figma">Nama Kegiatan / Acara *</label>
-                    <input type="text" id="inpKegiatan" class="form-control form-control-figma" value="National IT Summit &amp; Expo UB 2026" onkeyup="updateKalkulasi()">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="field-label-figma">Alamat Email Resmi *</label>
+                        <input type="email" id="inpEmail" class="field-input-figma" value="" placeholder="nama@email.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="field-label-figma">Estimasi Kehadiran Peserta (Orang) *</label>
+                        <input type="number" id="inpPeserta" class="field-input-figma" value="" placeholder="0">
+                    </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label-figma">Deskripsi Rencana Kegiatan &amp; Kebutuhan Teknis *</label>
-                    <textarea class="form-control form-control-figma" rows="3">Seminar nasional teknologi informasi dan pameran karya mahasiswa FILKOM UB dengan kebutuhan sound system utama, proyektor, dan meja registrasi.</textarea>
+                    <label class="field-label-figma">Nama Kegiatan / Acara *</label>
+                    <input type="text" id="inpKegiatan" class="field-input-figma" value="" placeholder="Masukkan nama kegiatan / acara" onkeyup="updateKalkulasi()">
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(1)">Kembali ke Jadwal</button>
-                    <button type="button" class="btn-navy-figma" onclick="goToStep(3)">Lanjut ke Unggah Dokumen &rarr;</button>
+                <div class="mb-4">
+                    <label class="field-label-figma">Deskripsi Rencana Kegiatan &amp; Kebutuhan Teknis *</label>
+                    <textarea id="inpDeskripsi" class="field-input-figma" rows="3" placeholder="Deskripsikan tujuan acara, susunan teknis, dan kebutuhan ruangan..."></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <button type="button" class="btn-outline-figma" onclick="goToStep(1)">Kembali ke Jadwal</button>
+                    <button type="button" class="btn-navy-figma" onclick="goToStep(3)">Lanjut ke Unggah Dokumen ➔</button>
                 </div>
             </div>
 
             <!-- ================= STEP 3: UNGGAH PROPOSAL ================= -->
-            <div id="step-3" style="display: none;">
-                <h5 class="fw-bold mb-1" style="color: var(--ub-navy);">3. Unggah Berkas &amp; Dokumen Proposal Persyaratan</h5>
-                <p class="text-muted small mb-4">Maksimal ukuran berkas 10 MB per dokumen dalam format PDF.</p>
+            <div id="step-panel-3" style="display: none;">
+                <div class="section-header-title">3. Unggah Berkas &amp; Dokumen Proposal Persyaratan</div>
+                <!-- Sesuai permintaan user: teks 'Sesuai LK 1.3 & LK 6.1:' dihapus -->
+                <div class="section-header-desc">Maksimal ukuran berkas 10 MB per dokumen dalam format PDF.</div>
 
-                <div class="mb-3">
-                    <label class="form-label-figma">Proposal Kegiatan Resmi *</label>
-                    <div class="dropzone-figma" onclick="document.getElementById('fileProposal').click()">
-                        <div class="fs-4 fw-bold text-dark mb-1">+</div>
-                        <div class="fw-bold text-dark" id="labelFileProposal">Klik atau Tarik Berkas Proposal PDF ke sini</div>
-                        <div class="text-muted small">Format PDF • Maksimal 10 MB</div>
-                        <input type="file" id="fileProposal" name="berkas" accept=".pdf" class="d-none" onchange="handleFileSelect(this)">
-                    </div>
-                </div>
-
+                <!-- Dropzone 1: Proposal Kegiatan Resmi -->
                 <div class="mb-4">
-                    <label class="form-label-figma">Surat Pengantar Dekanat / Identitas Pemohon *</label>
-                    <div class="dropzone-figma" onclick="document.getElementById('fileSurat').click()">
-                        <div class="fs-4 fw-bold text-dark mb-1">+</div>
-                        <div class="fw-bold text-dark" id="labelFileSurat">Surat Izin Dekan atau KTP Pemohon</div>
-                        <div class="text-muted small">Format PDF / JPG / PNG • Maksimal 5 MB</div>
-                        <input type="file" id="fileSurat" accept=".pdf,.jpg,.png" class="d-none" onchange="document.getElementById('labelFileSurat').innerText = 'Berkas terpilih: ' + this.files[0].name">
+                    <label class="field-label-figma">Proposal Kegiatan Resmi *</label>
+                    <div id="dropzoneBoxProposal" class="dropzone-box" onclick="triggerFileInput('fileProposal', event)">
+                        <!-- State Kosong (Default) -->
+                        <div id="emptyStateProposal">
+                            <div class="dropzone-icon">+</div>
+                            <div class="fw-bold text-dark" id="labelFileProposal">Klik atau Tarik Berkas Proposal PDF ke sini</div>
+                            <div class="text-muted small mt-1">Format PDF • Maksimal 10 MB</div>
+                        </div>
+
+                        <!-- State Terunggah Sesuai Komponen Figma Variant 2 (83:69) -->
+                        <div id="cardUploadedProposal" class="uploaded-card-figma" style="display: none;">
+                            <div class="file-icon-square">PDF</div>
+                            <div class="file-info-col">
+                                <div class="file-title-text" id="fileNameProposal">Proposal_Kegiatan.pdf</div>
+                                <div class="file-status-text" id="fileMetaProposal">0 MB • Berhasil diunggah</div>
+                            </div>
+                            <button type="button" class="btn-remove-file" onclick="removeUploadedFile('fileProposal', 'emptyStateProposal', 'cardUploadedProposal', event)">Hapus</button>
+                        </div>
+
+                        <input type="file" id="fileProposal" name="berkas" accept=".pdf" class="d-none"
+                               onchange="onFileChanged(this, 'emptyStateProposal', 'cardUploadedProposal', 'fileNameProposal', 'fileMetaProposal', 'revDokumen')">
                     </div>
                 </div>
 
-                <div class="alert-info-sky mb-4">
-                    Verifikasi Kelayakan: Berkas akan diperiksa oleh verifikator DTUK UB sebelum antrean diteruskan ke Kepala Humas &amp; Dekanat.
+                <!-- Dropzone 2: Surat Pengantar Dekanat / Identitas Pemohon -->
+                <div class="mb-4">
+                    <label class="field-label-figma">Surat Pengantar Dekanat / Identitas Pemohon *</label>
+                    <div id="dropzoneBoxSurat" class="dropzone-box" onclick="triggerFileInput('fileSurat', event)">
+                        <!-- State Kosong (Default) -->
+                        <div id="emptyStateSurat">
+                            <div class="dropzone-icon">+</div>
+                            <div class="fw-bold text-dark" id="labelFileSurat">Klik atau Tarik Berkas Surat Izin Dekan / KTP ke sini</div>
+                            <div class="text-muted small mt-1">Format PDF / JPG / PNG • Maksimal 5 MB</div>
+                        </div>
+
+                        <!-- State Terunggah Sesuai Komponen Figma Variant 2 (83:69) -->
+                        <div id="cardUploadedSurat" class="uploaded-card-figma" style="display: none;">
+                            <div class="file-icon-square">PDF</div>
+                            <div class="file-info-col">
+                                <div class="file-title-text" id="fileNameSurat">Surat_Izin_Dekan_FILKOM.pdf</div>
+                                <div class="file-status-text" id="fileMetaSurat">0 MB • Berhasil diunggah</div>
+                            </div>
+                            <button type="button" class="btn-remove-file" onclick="removeUploadedFile('fileSurat', 'emptyStateSurat', 'cardUploadedSurat', event)">Hapus</button>
+                        </div>
+
+                        <input type="file" id="fileSurat" accept=".pdf,.jpg,.png" class="d-none"
+                               onchange="onFileChanged(this, 'emptyStateSurat', 'cardUploadedSurat', 'fileNameSurat', 'fileMetaSurat', null)">
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(2)">Kembali ke Identitas</button>
-                    <button type="button" class="btn-navy-figma" onclick="goToStep(4)">Lanjut ke Kalkulasi Biaya &rarr;</button>
+                <div class="alert-sky-figma mb-4">
+                    <span>ℹ</span>
+                    <div>Verifikasi Kelayakan: Berkas akan diperiksa oleh staf DTUK UB sebelum antrean diteruskan ke Kepala Humas &amp; Dekanat.</div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <button type="button" class="btn-outline-figma" onclick="goToStep(2)">Kembali ke Identitas</button>
+                    <button type="button" class="btn-navy-figma" onclick="goToStep(4)">Lanjut ke Kalkulasi Biaya ➔</button>
                 </div>
             </div>
 
             <!-- ================= STEP 4: REVIEW & KALKULASI BIAYA ================= -->
-            <div id="step-4" style="display: none;">
-                <h5 class="fw-bold mb-1" style="color: var(--ub-navy);">4. Review Pengajuan &amp; Rincian Estimasi Biaya Sewa</h5>
-                <p class="text-muted small mb-4">Kalkulasi biaya otomatis berdasarkan lama sewa, tarif dasar, dan kategori pemohon.</p>
+            <div id="step-panel-4" style="display: none;">
+                <div class="section-header-title">4. Review Pengajuan &amp; Rincian Estimasi Biaya Sewa</div>
+                <div class="section-header-desc">Kalkulasi biaya otomatis berdasarkan lama sewa, tarif dasar, dan kategori pemohon.</div>
 
                 <div class="row g-4 mb-4">
-                    <!-- Kiri: Ringkasan Permohonan -->
+                    <!-- Kolom Kiri: Ringkasan Permohonan -->
                     <div class="col-md-6">
-                        <div class="summary-card-left h-100">
-                            <h6 class="fw-bold mb-3" style="color: var(--ub-navy);">Ringkasan Permohonan:</h6>
+                        <div class="summary-card-left">
+                            <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Ringkasan Permohonan:</h6>
                             <div class="row mb-2 small">
                                 <div class="col-5 text-muted">Aset Dipilih:</div>
                                 <div class="col-7 fw-bold" id="revAset">-</div>
@@ -485,11 +930,11 @@
                             </div>
                             <div class="row mb-2 small">
                                 <div class="col-5 text-muted">Pemohon / Lembaga:</div>
-                                <div class="col-7 fw-bold" id="revPemohon">Muhamad Hilal Arrafi / FILKOM UB</div>
+                                <div class="col-7 fw-bold" id="revPemohon">-</div>
                             </div>
                             <div class="row mb-2 small">
                                 <div class="col-5 text-muted">Nama Kegiatan:</div>
-                                <div class="col-7 fw-bold" id="revKegiatan">National IT Summit &amp; Expo UB 2026</div>
+                                <div class="col-7 fw-bold" id="revKegiatan">-</div>
                             </div>
                             <div class="row small">
                                 <div class="col-5 text-muted">Dokumen:</div>
@@ -498,30 +943,30 @@
                         </div>
                     </div>
 
-                    <!-- Kanan: Rincian Estimasi Biaya (Kotak Kuning Sesuai Pengajuan 4.png) -->
+                    <!-- Kolom Kanan: Rincian Estimasi Biaya (Kalkulasi Akurat & Presisi) -->
                     <div class="col-md-6">
-                        <div class="summary-card-right h-100">
-                            <h6 class="fw-bold mb-3" style="color: var(--ub-navy);">Rincian Estimasi Biaya:</h6>
+                        <div class="summary-card-right">
+                            <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Rincian Estimasi Biaya:</h6>
                             <div class="d-flex justify-content-between mb-2 small">
-                                <span class="text-muted" id="revLabelTarif">Tarif Dasar Sewa (0 hari):</span>
+                                <span class="text-muted" id="revLabelTarif">Tarif Dasar Sewa:</span>
                                 <span class="fw-bold" id="revTarifDasar">Rp 0</span>
                             </div>
-                            <div class="d-flex justify-content-between mb-2 small">
+                            <div id="revSubsidiRow" class="d-flex justify-content-between mb-2 small" style="display: none;">
                                 <span class="text-muted">Subsidi Civitas UB (30%):</span>
                                 <span class="fw-bold text-success" id="revSubsidi">- Rp 0</span>
                             </div>
-                            <hr style="border-color: #F59E0B;">
+                            <hr style="border-color: var(--ub-gold); margin: 12px 0;">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold small" style="color: var(--ub-navy);">Total Estimasi Biaya Sistem</span>
+                                <span class="fw-bold small" style="color: var(--ub-navy);">Total Estimasi Biaya</span>
                                 <span class="fw-bold fs-5" style="color: var(--ub-navy);" id="revTotalAkhir">Rp 0</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(3)">Kembali ke Unggah Dokumen</button>
-                    <button type="submit" class="btn-gold-submit">Kirim Pengajuan Sewa</button>
+                <div class="d-flex justify-content-end gap-3">
+                    <button type="button" class="btn-outline-figma" onclick="goToStep(3)">Kembali ke Unggah Dokumen</button>
+                    <button type="submit" class="btn-gold-figma">Kirim Pengajuan Sewa</button>
                 </div>
             </div>
 
@@ -529,100 +974,223 @@
     </form>
 </main>
 
-<!-- FOOTER GELAP SESUAI FIGMA -->
+<!-- FOOTER FIGMA (1:446) -->
 <footer class="footer-figma">
-    <div class="container">
-        <div class="row g-4 pb-4 border-bottom border-secondary border-opacity-25">
-            <div class="col-md-6">
-                <h6>Universitas Brawijaya</h6>
-                <p class="mb-2">Direktorat Tata Usaha dan Kerumahtanggaan (DTUK)<br>Gedung Rektorat Lt. 1, Jl. Veteran, Ketawanggede, Kota Malang, Jawa Timur 65145</p>
-                <p class="mb-0">Kontak: humas@ub.ac.id | Telp: (0341) 551611</p>
-            </div>
-            <div class="col-md-3">
-                <h6>Navigasi Halaman</h6>
-                <a th:href="@{/pengajuan}">Katalog Fasilitas</a>
-                <a th:href="@{/pengajuan/tambah}">Formulir Sewa</a>
-                <a th:href="@{/pengajuan}">Pelacakan Status</a>
-                <a th:href="@{/pengajuan}">Pembayaran Digital</a>
-            </div>
-            <div class="col-md-3">
-                <h6>Portal Pengguna</h6>
-                <a th:href="@{/pengajuan}">Login SSO UB</a>
-                <a th:href="@{/pengajuan}">Akun Peminjam Luar</a>
-                <a th:href="@{/pengajuan}">Dashboard Pejabat</a>
-            </div>
+    <div class="row g-4 pb-4">
+        <div class="col-lg-6">
+            <h6>Universitas Brawijaya</h6>
+            <p class="mb-2">Direktorat Tata Usaha dan Kerumahtanggaan (DTUK)<br>Gedung Rektorat Lt. 1, Jl. Veteran, Ketawanggede, Kota Malang, Jawa Timur 65145</p>
+            <p class="mb-0">Kontak: humas@ub.ac.id | Telp: (0341) 551611</p>
         </div>
-        <div class="pt-3 small">
-            &copy; 2026 Universitas Brawijaya. Sistem Informasi Penyewaan Aset (SIPERSET UB).
+        <div class="col-lg-3 col-6">
+            <h6>Navigasi Halaman</h6>
+            <a th:href="@{/pengajuan/tambah}">Katalog Fasilitas</a>
+            <a th:href="@{/pengajuan/tambah}">Formulir Sewa</a>
+            <a th:href="@{/pengajuan}">Pelacakan Status</a>
+            <a th:href="@{/pengajuan}">Pembayaran Digital</a>
         </div>
+        <div class="col-lg-3 col-6">
+            <h6>Portal Pengguna</h6>
+            <a th:href="@{/pengajuan}">Login SSO UB</a>
+            <a th:href="@{/pengajuan}">Akun Peminjam Luar</a>
+            <a th:href="@{/pengajuan}">Dashboard Pejabat</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div>&copy; 2026 Universitas Brawijaya. Sistem Informasi Penyewaan Aset (SIPERSET UB).</div>
+        <div class="text-muted">Direktorat Tata Usaha dan Kerumahtanggaan (DTUK)</div>
     </div>
 </footer>
 
 <script>
     function goToStep(stepNumber) {
         for (let i = 1; i <= 4; i++) {
-            document.getElementById('step-' + i).style.display = (i === stepNumber) ? 'block' : 'none';
-            const ind = document.getElementById('ind-' + i);
-            const badge = document.getElementById('badge-' + i);
-            ind.classList.remove('active', 'done');
+            document.getElementById('step-panel-' + i).style.display = (i === stepNumber) ? 'block' : 'none';
+            const node = document.getElementById('node-' + i);
+            const circle = document.getElementById('circle-' + i);
+            node.classList.remove('active', 'done', 'inactive');
             if (i < stepNumber) {
-                ind.classList.add('done');
-                badge.innerText = '✓';
+                node.classList.add('done');
+                circle.innerText = '✓';
             } else if (i === stepNumber) {
-                ind.classList.add('active');
-                badge.innerText = i;
+                node.classList.add('active');
+                circle.innerText = i;
             } else {
-                badge.innerText = i;
+                node.classList.add('inactive');
+                circle.innerText = i;
             }
         }
         updateKalkulasi();
     }
 
-    function handleFileSelect(input) {
+    function formatBytes(bytes) {
+        if (!bytes || bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function triggerFileInput(inputId, e) {
+        if (e.target.closest('.btn-remove-file')) return;
+        document.getElementById(inputId).click();
+    }
+
+    function onFileChanged(input, emptyId, cardId, nameId, metaId, revId) {
         if (input.files && input.files[0]) {
-            document.getElementById('labelFileProposal').innerText = '✓ Berkas siap dikirim: ' + input.files[0].name;
-            document.getElementById('revDokumen').innerText = input.files[0].name;
+            const file = input.files[0];
+            document.getElementById(emptyId).style.display = 'none';
+            const card = document.getElementById(cardId);
+            card.style.display = 'flex';
+            document.getElementById(nameId).innerText = file.name;
+            document.getElementById(metaId).innerText = formatBytes(file.size) + ' • Berhasil diunggah';
+            if (revId) {
+                document.getElementById(revId).innerText = file.name;
+            }
         }
+    }
+
+    function removeUploadedFile(inputId, emptyId, cardId, e) {
+        e.stopPropagation();
+        const input = document.getElementById(inputId);
+        input.value = '';
+        document.getElementById(cardId).style.display = 'none';
+        document.getElementById(emptyId).style.display = 'block';
+        if (inputId === 'fileProposal') {
+            document.getElementById('revDokumen').innerText = 'Belum dipilih';
+        }
+    }
+
+    function initDragAndDrop(boxId, inputId, emptyId, cardId, nameId, metaId, revId) {
+        const box = document.getElementById(boxId);
+        if (!box) return;
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            box.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                box.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            box.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                box.classList.remove('dragover');
+            }, false);
+        });
+
+        box.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            box.classList.remove('dragover');
+            const dt = e.dataTransfer;
+            if (dt.files && dt.files.length > 0) {
+                const input = document.getElementById(inputId);
+                input.files = dt.files;
+                onFileChanged(input, emptyId, cardId, nameId, metaId, revId);
+            }
+        }, false);
     }
 
     function formatRp(angka) {
         return 'Rp ' + Math.round(angka).toLocaleString('id-ID');
     }
 
+    function showJadwalStatus(isSuccess, message) {
+        const container = document.getElementById('boxStatusJadwal');
+        const alertBox = document.getElementById('alertJadwalContent');
+        const icon = document.getElementById('alertJadwalIcon');
+        const text = document.getElementById('statusJadwalText');
+
+        container.style.display = 'block';
+        if (isSuccess) {
+            alertBox.className = 'alert-mint-figma';
+            icon.innerText = '✓';
+        } else {
+            alertBox.className = 'alert-danger-figma';
+            icon.innerText = '⚠️';
+        }
+        text.innerText = message;
+    }
+
     function updateKalkulasi() {
         const select = document.getElementById('selectAset');
         const opt = select.options[select.selectedIndex];
-        const namaAset = opt.getAttribute('data-nama') || '-';
-        const tarif = parseFloat(opt.getAttribute('data-tarif')) || 0;
+        const idAset = select.value;
+        const namaAset = opt ? (opt.getAttribute('data-nama') || '-') : '-';
+        const tarif = opt ? (parseFloat(opt.getAttribute('data-tarif')) || 0) : 0;
         const mulai = document.getElementById('tglMulai').value;
         const selesai = document.getElementById('tglSelesai').value;
         const kategori = document.getElementById('kategoriPemohon').value;
 
-        document.getElementById('boxSubsidi').style.display = (kategori === 'civitas') ? 'block' : 'none';
+        // 1. Notif Subsidi: Hanya Muncul Saat Memilih Internal Civitas
+        document.getElementById('boxSubsidi').style.display = (kategori === 'civitas') ? 'flex' : 'none';
 
+        // 2. Notif Jadwal: Hanya Muncul Begitu Tanggal Dipilih
+        const containerJadwal = document.getElementById('boxStatusJadwal');
         let hari = 0;
+
         if (mulai && selesai) {
             const d1 = new Date(mulai);
             const d2 = new Date(selesai);
-            if (d2 >= d1) {
+
+            if (d2 < d1) {
+                showJadwalStatus(false, 'Tanggal selesai peminjaman tidak boleh mendahului tanggal mulai sewa.');
+            } else {
                 hari = Math.floor((d2 - d1) / (1000 * 60 * 60 * 24)) + 1;
-                document.getElementById('statusJadwalText').innerText =
-                    'Jadwal Bebas & Tersedia! Durasi peminjaman: ' + hari + ' Hari. Anda dapat melanjutkan ke pengisian data identitas kegiatan.';
+
+                // Cek Bentrok (AST-01 terisi pada 10 - 12 Des 2026 atau via API)
+                const tglBentrokMulai = new Date('2026-12-10');
+                const tglBentrokSelesai = new Date('2026-12-12');
+
+                const isBentrok = (idAset === 'AST-01') && (d1 <= tglBentrokSelesai && d2 >= tglBentrokMulai);
+
+                if (isBentrok) {
+                    showJadwalStatus(false, 'Jadwal aset pada tanggal tersebut sudah terisi (Dipesan). Silakan pilih tanggal lain.');
+                } else {
+                    showJadwalStatus(true, 'Jadwal Bebas & Tersedia! Durasi peminjaman: ' + hari + ' Hari. Anda dapat melanjutkan ke pengisian data identitas kegiatan.');
+                }
             }
+        } else {
+            // Jika tanggal belum dipilih, notifikasi disembunyikan sama sekali
+            containerJadwal.style.display = 'none';
         }
 
+        // 3. Perhitungan Total Biaya yang Benar (Tarif Dasar - Subsidi)
         const totalDasar = tarif * hari;
         const subsidi = (kategori === 'civitas') ? totalDasar * 0.30 : 0;
+        const totalAkhir = Math.max(0, totalDasar - subsidi);
 
-        document.getElementById('revAset').innerText = namaAset;
-        document.getElementById('revJadwal').innerText = (mulai && selesai) ? (mulai + ' s/d ' + selesai + ' (' + hari + ' Hari)') : '-';
-        document.getElementById('revPemohon').innerText = document.getElementById('inpNama').value + ' / ' + document.getElementById('inpOrg').value;
-        document.getElementById('revKegiatan').innerText = document.getElementById('inpKegiatan').value;
+        const namaPemohon = document.getElementById('inpNama').value.trim();
+        const lembagaPemohon = document.getElementById('inpOrg').value.trim();
+        const namaKegiatan = document.getElementById('inpKegiatan').value.trim();
+
+        document.getElementById('revAset').innerText = (namaAset !== '-') ? namaAset : '-';
+        document.getElementById('revJadwal').innerText = (mulai && selesai && hari > 0) ? (mulai + ' s/d ' + selesai + ' (' + hari + ' Hari)') : '-';
+        document.getElementById('revPemohon').innerText = (namaPemohon || lembagaPemohon) ? ((namaPemohon || '-') + ' / ' + (lembagaPemohon || '-')) : '-';
+        document.getElementById('revKegiatan').innerText = namaKegiatan || '-';
         document.getElementById('revLabelTarif').innerText = 'Tarif Dasar Sewa (' + hari + ' hari × ' + formatRp(tarif) + '):';
         document.getElementById('revTarifDasar').innerText = formatRp(totalDasar);
-        document.getElementById('revSubsidi').innerText = '- ' + formatRp(subsidi);
-        document.getElementById('revTotalAkhir').innerText = formatRp(totalDasar);
+
+        // Row Subsidi di Step 4
+        const revSubsidiRow = document.getElementById('revSubsidiRow');
+        if (kategori === 'civitas' && hari > 0) {
+            revSubsidiRow.style.display = 'flex';
+            document.getElementById('revSubsidi').innerText = '- ' + formatRp(subsidi);
+        } else {
+            revSubsidiRow.style.display = 'none';
+        }
+
+        // Total Akhir Bersih
+        document.getElementById('revTotalAkhir').innerText = formatRp(totalAkhir);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initDragAndDrop('dropzoneBoxProposal', 'fileProposal', 'emptyStateProposal', 'cardUploadedProposal', 'fileNameProposal', 'fileMetaProposal', 'revDokumen');
+        initDragAndDrop('dropzoneBoxSurat', 'fileSurat', 'emptyStateSurat', 'cardUploadedSurat', 'fileNameSurat', 'fileMetaSurat', null);
+    });
 </script>
 
 </body>

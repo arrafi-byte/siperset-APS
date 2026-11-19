@@ -26,7 +26,7 @@ public class PengajuanController {
     public String index(Model model) {
         model.addAttribute("daftarPengajuan", pengajuanService.getAllPengajuan());
         model.addAttribute("daftarJadwal", pengajuanService.getAllJadwal());
-        return "pengajuan/index";
+        return "pengajuan/hasil";
     }
 
     @GetMapping("/tambah")
@@ -40,6 +40,7 @@ public class PengajuanController {
     public String kirimPengajuan(@Valid @ModelAttribute("pengajuan") Pengajuan pengajuan,
                                  BindingResult result,
                                  @RequestParam("berkas") MultipartFile berkas,
+                                 @RequestParam(value = "kategoriPemohon", required = false) String kategoriPemohon,
                                  Model model,
                                  RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -47,7 +48,7 @@ public class PengajuanController {
             return "pengajuan/form-pengajuan";
         }
         try {
-            Pengajuan tersimpan = pengajuanService.submitPengajuan(pengajuan, berkas);
+            Pengajuan tersimpan = pengajuanService.submitPengajuan(pengajuan, berkas, kategoriPemohon);
             redirectAttributes.addFlashAttribute("pesanSukses",
                     "Pengajuan berhasil dikirim! Nomor Registrasi: " + tersimpan.getIdPengajuan()
                     + " | Total Biaya: Rp " + String.format("%,.0f", tersimpan.getTotalBiaya()));

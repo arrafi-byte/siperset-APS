@@ -22,12 +22,15 @@ public class PengajuanService {
     @Autowired private DokumenRepository dokumenRepository;
     @Autowired private PersetujuanRepository persetujuanRepository;
 
-    // Seeder Data Awal Otomatis saat aplikasi dijalankan
+    // Seeder Data Awal Otomatis saat aplikasi dijalankan (Sesuai Katalog Figma)
     @PostConstruct
     public void initDataAwal() {
-        asetRepository.save(new Aset("AST-01", "Gedung Samantha Krida", 2500, 15000000.0));
-        asetRepository.save(new Aset("AST-02", "Auditorium Widyaloka", 500, 5000000.0));
-        asetRepository.save(new Aset("AST-03", "GOR Pertamina UB", 1500, 8000000.0));
+        asetRepository.save(new Aset("AST-01", "Gedung Samantha Krida (SAMKRI)", 4500, 25000000.0));
+        asetRepository.save(new Aset("AST-02", "Auditorium Widyaloka", 600, 8500000.0));
+        asetRepository.save(new Aset("AST-03", "GOR Pertamina UB", 2000, 12000000.0));
+        asetRepository.save(new Aset("AST-04", "Gedung Kebudayaan Mahasiswa (GKM)", 400, 5000000.0));
+        asetRepository.save(new Aset("AST-05", "Bus Eksekutif Pariwisata UB", 45, 2200000.0));
+        asetRepository.save(new Aset("AST-06", "Gazebo Raden Wijaya", 100, 750000.0));
 
         // Satu jadwal yang sudah "Dipesan" untuk menguji Alur Gagal A1 (Jadwal Bentrok)
         jadwalAsetRepository.save(new JadwalAset(
@@ -53,12 +56,25 @@ public class PengajuanService {
     }
 
     public Double hitungTotalBiaya(Double tarifSewa, LocalDate mulai, LocalDate selesai) {
+        return hitungTotalBiaya(tarifSewa, mulai, selesai, null);
+    }
+
+    public Double hitungTotalBiaya(Double tarifSewa, LocalDate mulai, LocalDate selesai, String kategori) {
         long durasiHari = ChronoUnit.DAYS.between(mulai, selesai) + 1;
-        return durasiHari * tarifSewa;
+        double total = durasiHari * tarifSewa;
+        if ("civitas".equalsIgnoreCase(kategori)) {
+            total = total * 0.70; // Subsidi 30% untuk internal civitas
+        }
+        return total;
     }
 
     @Transactional
     public Pengajuan submitPengajuan(Pengajuan pengajuan, MultipartFile berkasPdf) {
+        return submitPengajuan(pengajuan, berkasPdf, null);
+    }
+
+    @Transactional
+    public Pengajuan submitPengajuan(Pengajuan pengajuan, MultipartFile berkasPdf, String kategoriPemohon) {
         // 1. Validasi Tanggal (Alur Gagal A2)
         if (pengajuan.getTanggalSelesaiSewa().isBefore(pengajuan.getTanggalMulaiSewa())) {
             throw new IllegalArgumentException("Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa.");
@@ -88,7 +104,7 @@ public class PengajuanService {
         String idBaru = "PGJ-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
         pengajuan.setIdPengajuan(idBaru);
         pengajuan.setStatusPengajuan("Diajukan");
-        pengajuan.setTotalBiaya(hitungTotalBiaya(aset.getTarifSewa(), pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa()));
+        pengajuan.setTotalBiaya(hitungTotalBiaya(aset.getTarifSewa(), pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa(), kategoriPemohon));
         pengajuanRepository.save(pengajuan);
 
         // 5. Simpan Dokumen dengan status "Menunggu"

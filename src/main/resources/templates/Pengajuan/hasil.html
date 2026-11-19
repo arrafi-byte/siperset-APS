@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lacak Pengajuan - SIPERSET UB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Plus Jakarta Sans Sesuai Figma -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ub-navy: #0c2340;
+            --ub-navy-hover: #14335e;
+            --ub-gold: #eaaa00;
+            --ub-gold-hover: #d99b00;
+            --ub-bg: #f8fafc;
+            --ub-border: #e2e8f0;
+            --ub-text-dark: #0c2340;
+            --ub-text-muted: #64748b;
+            --ub-green: #15803d;
+            --ub-green-border: #86efac;
+            --ub-green-bg: #dcfce7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--ub-bg);
+            color: #1e293b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Site Header Figma (1:795) */
+        .site-header-figma {
+            background-color: #ffffff;
+            border-bottom: 2px solid var(--ub-border);
+            padding: 14px 84px;
+            width: 100%;
+        }
+        @media (max-width: 992px) {
+            .site-header-figma {
+                padding: 14px 24px;
+            }
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .emblem-box {
+            width: 44px;
+            height: 44px;
+            background-color: var(--ub-navy);
+            border: 2px solid var(--ub-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            padding: 4px;
+        }
+
+        .emblem-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ub-navy);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ub-text-muted);
+            line-height: 1.2;
+        }
+
+        .nav-link-figma {
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .nav-link-figma:hover {
+            background-color: #f1f5f9;
+            color: var(--ub-navy);
+        }
+
+        .nav-link-figma.active {
+            background-color: #eff6ff;
+            color: var(--ub-navy);
+            font-weight: 700;
+        }
+
+        /* Component Figma: Btn Masuk Varian 2 (Logged In, Node 77:67) */
+        .user-profile-badge {
+            background-color: #ffffff;
+            border: 1.5px solid var(--ub-border);
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 16px 5px 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .user-profile-badge:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            background-color: #0c2340;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 14.5px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .user-name-text {
+            color: #0c2340;
+            font-size: 14.5px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .btn-sso-header {
+            background-color: var(--ub-navy);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14.5px;
+            padding: 11px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s;
+        }
+
+        .btn-sso-header:hover {
+            background-color: var(--ub-navy-hover);
+            color: #ffffff;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1272px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* Search Card Figma (1:817) */
+        .search-card-figma {
+            background-color: #ffffff;
+            border: 1px solid var(--ub-border);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(12, 35, 64, 0.03);
+        }
+
+        .search-label-figma {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--ub-navy);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .search-input-figma {
+            border: 1.5px solid var(--ub-border);
+            border-radius: 8px;
+            padding: 11px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            flex-grow: 1;
+            background-color: #ffffff;
+        }
+
+        .search-input-figma:focus {
+            outline: none;
+            border-color: var(--ub-navy);
+            box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.08);
+        }
+
+        /* Timeline Card Figma (1:824) */
+        .timeline-card-figma {
+            background-color: #ffffff;
+            border: 1px solid var(--ub-border);
+            border-radius: 18px;
+            padding: 36px 40px;
+            box-shadow: 0 1px 4px rgba(12, 35, 64, 0.04);
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-card-figma {
+                padding: 24px 18px;
+            }
+        }
+
+        .timeline-header {
+            border-bottom: 1.5px solid var(--ub-border);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .badge-status-figma {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* Stepper 5 Tahap Horizontal */
+        .stepper-5-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .step-5-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1 1 0%;
+            position: relative;
+            padding: 0 8px;
+            z-index: 2;
+        }
+
+        .circle-5-track {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        /* TAHAP 1: MENYALA (ACTIVE / COMPLETED) */
+        .step-5-node.lit .circle-5-track {
+            background-color: var(--ub-green);
+            border: 3px solid var(--ub-green-border);
+            color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+        }
+        .step-5-node.lit .step-5-title {
+            color: var(--ub-navy);
+            font-weight: 700;
+        }
+        .step-5-node.lit .step-5-desc {
+            color: var(--ub-text-muted);
+        }
+
+        /* TAHAP 2-5: ABU-ABU (INACTIVE / PENDING) */
+        .step-5-node.gray .circle-5-track {
+            background-color: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            color: #94a3b8;
+        }
+        .step-5-node.gray .step-5-title {
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .step-5-node.gray .step-5-desc {
+            color: #94a3b8;
+        }
+
+        .step-5-title {
+            font-size: 13.5px;
+            margin-bottom: 4px;
+            line-height: 1.25;
+        }
+
+        .step-5-desc {
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        /* Garis Penghubung Horizontal */
+        .stepper-5-track-line {
+            position: absolute;
+            top: 24px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background-color: var(--ub-border);
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .stepper-5-container {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .stepper-5-track-line {
+                display: none;
+            }
+            .step-5-node {
+                flex-direction: row;
+                text-align: left;
+                gap: 16px;
+                padding: 0;
+            }
+            .circle-5-track {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+        }
+
+        /* 2 Kolom Bawah Figma (1:863) */
+        .history-box-figma {
+            background-color: #f8fafc;
+            border: 1px solid var(--ub-border);
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+        }
+
+        .invoice-box-figma {
+            background-color: #fff8e6;
+            border: 1.5px solid var(--ub-gold);
+            border-radius: 12px;
+            padding: 26px 24px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-navy-figma {
+            background-color: var(--ub-navy);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.15s;
+        }
+
+        .btn-navy-figma:hover {
+            background-color: var(--ub-navy-hover);
+            color: #ffffff;
+        }
+
+        .btn-outline-figma {
+            background-color: #ffffff;
+            border: 1.5px solid var(--ub-border);
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 11px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .btn-outline-figma:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* Database Log Card */
+        .db-log-card {
+            background-color: #ffffff;
+            border: 1px solid var(--ub-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(12, 35, 64, 0.03);
+            margin-bottom: 40px;
+        }
+
+        /* Footer Figma (1:896) */
+        .footer-figma {
+            background-color: #061528;
+            border-top: 3px solid var(--ub-gold);
+            color: #94a3b8;
+            padding: 48px 84px 32px;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        @media (max-width: 992px) {
+            .footer-figma {
+                padding: 40px 24px 24px;
+            }
+        }
+
+        .footer-figma h6 {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-figma p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer-figma a {
+            color: #94a3b8;
+            font-size: 13px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.15s;
+        }
+
+        .footer-figma a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(148, 163, 184, 0.15);
+            padding-top: 24px;
+            margin-top: 32px;
+            font-size: 12.5px;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SITE HEADER FIGMA -->
+<header class="site-header-figma">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <!-- Brand -->
+        <a th:href="@{/pengajuan}" class="brand-container">
+            <div class="emblem-box">
+                <img th:src="@{/images/logo-ub.png}" alt="Logo UB"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--ub-gold);font-weight:800;font-size:14px;\'>UB</span>';">
+            </div>
+            <div>
+                <div class="brand-title">SIPERSET UB</div>
+                <div class="brand-subtitle">Sistem Informasi Penyewaan Aset Universitas Brawijaya</div>
+            </div>
+        </a>
+
+        <!-- Main Nav -->
+        <nav class="d-none d-md-flex align-items-center gap-1">
+            <a th:href="@{/pengajuan}" class="nav-link-figma">Beranda</a>
+            <a th:href="@{/pengajuan}" class="nav-link-figma">Katalog &amp; Jadwal</a>
+            <a th:href="@{/pengajuan/tambah}" class="nav-link-figma">Ajukan Sewa</a>
+            <a th:href="@{/pengajuan}" class="nav-link-figma active">Lacak Pengajuan</a>
+        </nav>
+
+        <!-- Header Actions: Component Btn Masuk Varian 2 Figma (Node 77:67) -->
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/pengajuan/tambah}" class="btn-navy-figma" style="padding: 9px 18px; font-size: 13.5px;">+ Ajukan Sewa Baru</a>
+            <div class="user-profile-badge" title="Akun Pengguna Terautentikasi">
+                <div class="user-avatar-circle">M</div>
+                <span class="user-name-text">mahasiswa_ub</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN WRAPPER -->
+<main class="main-wrapper">
+
+    <!-- Notifikasi Sukses Submit -->
+    <div th:if="${pesanSukses}" class="alert alert-success d-flex align-items-center shadow-sm mb-4" role="alert" style="border-radius: 8px; border-color: #86efac; background-color: #dcfce7; color: #166534;">
+        <div class="me-2 fw-bold">✓</div>
+        <div>
+            <strong>Pengajuan Berhasil Dikirim!</strong> <span th:text="${pesanSukses}"></span>
+        </div>
+    </div>
+
+    <!-- KOTAK PENCARIAN NOMOR REGISTRASI FIGMA (1:817) -->
+    <div class="search-card-figma">
+        <label class="search-label-figma">Masukkan Nomor Registrasi / Kode Pengajuan Sewa:</label>
+        <div class="d-flex gap-3">
+            <input type="text" class="search-input-figma"
+                   th:value="${!#lists.isEmpty(daftarPengajuan) ? daftarPengajuan[daftarPengajuan.size()-1].idPengajuan : 'UB-SEWA-2026-0891'}" readonly>
+            <button type="button" class="btn-navy-figma text-nowrap">Lacak Status</button>
+        </div>
+    </div>
+
+    <!-- KARTU TIMELINE PELACAKAN FIGMA (1:824) -->
+    <div class="timeline-card-figma">
+        <!-- Header Timeline -->
+        <div class="timeline-header">
+            <div>
+                <div class="fw-bold small mb-1" style="color: var(--ub-navy);"
+                     th:text="${!#lists.isEmpty(daftarPengajuan) ? 'No. Pengajuan: ' + daftarPengajuan[daftarPengajuan.size()-1].idPengajuan : 'No. Pengajuan: UB-SEWA-2026-0891'}">
+                </div>
+                <h3 class="fw-bold mb-1" style="color: var(--ub-navy); font-size: 22px;">Peminjaman Fasilitas Gedung Universitas Brawijaya</h3>
+                <div class="text-muted small"
+                     th:text="${!#lists.isEmpty(daftarPengajuan) ? 'Kode Aset: ' + daftarPengajuan[daftarPengajuan.size()-1].idAset + ' • Jadwal: ' + daftarPengajuan[daftarPengajuan.size()-1].tanggalMulaiSewa + ' s/d ' + daftarPengajuan[daftarPengajuan.size()-1].tanggalSelesaiSewa + ' • Status: Diajukan' : 'Gedung Samantha Krida (SAMKRI) • 20 - 21 Nov 2026 (2 Hari)'}">
+                </div>
+            </div>
+            <div class="badge-status-figma">⏳ ANTREAN VERIFIKASI DTUK</div>
+        </div>
+
+        <!-- VISUALISASI STEPPER 5 TAHAP DARI FIGMA -->
+        <!-- Khusus: Hanya Tahap 1 ("Pengajuan Dikirim") yang MENYALA, Tahap 2-5 ABU-ABU -->
+        <div class="stepper-5-container">
+            <div class="stepper-5-track-line"></div>
+
+            <!-- TAHAP 1: MENYALA (ACTIVE / COMPLETED) -->
+            <div class="step-5-node lit">
+                <div class="circle-5-track">✓</div>
+                <div class="step-5-title">1. Pengajuan Dikirim</div>
+                <div class="step-5-desc">Formulir &amp; berkas proposal berhasil terdaftar di sistem.</div>
+            </div>
+
+            <!-- TAHAP 2: ABU-ABU (INACTIVE) -->
+            <div class="step-5-node gray">
+                <div class="circle-5-track">2</div>
+                <div class="step-5-title">2. Verifikasi DTUK</div>
+                <div class="step-5-desc">Menunggu pemeriksaan kelengkapan berkas staf DTUK.</div>
+            </div>
+
+            <!-- TAHAP 3: ABU-ABU (INACTIVE) -->
+            <div class="step-5-node gray">
+                <div class="circle-5-track">3</div>
+                <div class="step-5-title">3. Approval Berjenjang</div>
+                <div class="step-5-desc">Antrean Humas UB &rarr; Dekan &rarr; Kepala DTUK.</div>
+            </div>
+
+            <!-- TAHAP 4: ABU-ABU (INACTIVE) -->
+            <div class="step-5-node gray">
+                <div class="circle-5-track">4</div>
+                <div class="step-5-title">4. Pembayaran Tagihan</div>
+                <div class="step-5-desc">Menunggu penerbitan invoice resmi PNBP UB.</div>
+            </div>
+
+            <!-- TAHAP 5: ABU-ABU (INACTIVE) -->
+            <div class="step-5-node gray">
+                <div class="circle-5-track">5</div>
+                <div class="step-5-title">5. Surat Izin Terbit</div>
+                <div class="step-5-desc">Penerbitan surat izin digital resmi kampus.</div>
+            </div>
+        </div>
+
+        <!-- 2 KOLOM DETAIL & AKSI FIGMA (1:863) -->
+        <div class="row g-4">
+            <!-- Kolom Kiri: Riwayat Persetujuan Berjenjang -->
+            <div class="col-lg-7">
+                <div class="history-box-figma">
+                    <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Catatan Riwayat Persetujuan Berjenjang:</h6>
+
+                    <div class="mb-3 pb-3 border-bottom border-secondary border-opacity-10">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold small" style="color: #1e293b;">1. Staf Verifikator DTUK UB</span>
+                            <span class="badge bg-warning text-dark" style="font-size: 11px;">Menunggu Verifikasi</span>
+                        </div>
+                        <div class="text-muted small" style="font-size: 12.5px;">
+                            Berkas dokumen persyaratan (PDF) telah tersimpan dan jadwal fasilitas telah dikunci dengan status <strong class="text-danger">Dipesan</strong>.
+                        </div>
+                    </div>
+
+                    <div class="mb-3 pb-3 border-bottom border-secondary border-opacity-10">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-semibold small text-muted">2. Kasubag Humas &amp; Protokoler UB</span>
+                            <span class="badge bg-light text-secondary border" style="font-size: 11px;">Dalam Antrean</span>
+                        </div>
+                        <div class="text-muted small" style="font-size: 12px;">Menunggu hasil verifikasi administratif DTUK.</div>
+                    </div>
+
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-semibold small text-muted">3. Kepala DTUK Universitas Brawijaya (Final Approval)</span>
+                            <span class="badge bg-light text-secondary border" style="font-size: 11px;">Dalam Antrean</span>
+                        </div>
+                        <div class="text-muted small" style="font-size: 12px;">Persetujuan akhir sebelum penerbitan invoice resmi pembayaran.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Aksi Pembayaran & Ringkasan Tagihan (1:887) -->
+            <div class="col-lg-5">
+                <div class="invoice-box-figma">
+                    <div>
+                        <span class="badge bg-warning text-dark mb-2" style="font-size: 11px; font-weight: 700;">MENUNGGU VERIFIKASI BERKAS</span>
+                        <h5 class="fw-bold mb-2" style="color: var(--ub-navy); font-size: 17px;">Pengajuan Berhasil Tercatat</h5>
+                        <p class="small text-muted mb-3" style="font-size: 13px; line-height: 1.5;"
+                           th:text="${!#lists.isEmpty(daftarPengajuan) ? 'Total estimasi biaya: Rp ' + #numbers.formatDecimal(daftarPengajuan[daftarPengajuan.size()-1].totalBiaya,0,'POINT',0,'COMMA') + '. Tagihan resmi akan diterbitkan setelah berkas disetujui pimpinan.' : 'Total tagihan sewa fasilitas akan ditampilkan setelah pengajuan diverifikasi.'}">
+                        </p>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2 mt-3">
+                        <a th:href="@{/pengajuan/tambah}" class="btn-navy-figma w-100">+ Ajukan Peminjaman Lainnya</a>
+                        <a th:href="@{/pengajuan}" class="btn-outline-figma w-100">Cek Jadwal di Kalender</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABEL LOG DATABASE H2 (Fitur Sementara untuk Pengujian & Verifikasi Entitas DPPL) -->
+    <div class="db-log-card">
+        <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Log Database Real-time (Sementara) — Entitas Pengajuan &amp; Jadwal Terkunci</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID Jadwal</th>
+                        <th>Kode Aset</th>
+                        <th>ID Pengajuan</th>
+                        <th>Rentang Tanggal</th>
+                        <th>Status Slot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="j : ${daftarJadwal}">
+                        <td th:text="${j.idJadwal}"></td>
+                        <td class="fw-bold" th:text="${j.idAset}"></td>
+                        <td th:text="${j.idPengajuan}"></td>
+                        <td th:text="${j.tanggalMulai + ' s/d ' + j.tanggalSelesai}"></td>
+                        <td>
+                            <span th:class="${j.statusKetersediaan == 'Dipesan' ? 'badge bg-danger' : 'badge bg-success'}"
+                                  th:text="${j.statusKetersediaan}">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- FOOTER FIGMA (1:896) -->
+<footer class="footer-figma">
+    <div class="row g-4 pb-4">
+        <div class="col-lg-6">
+            <h6>Universitas Brawijaya</h6>
+            <p class="mb-2">Direktorat Tata Usaha dan Kerumahtanggaan (DTUK)<br>Gedung Rektorat Lt. 1, Jl. Veteran, Ketawanggede, Kota Malang, Jawa Timur 65145</p>
+            <p class="mb-0">Kontak: humas@ub.ac.id | Telp: (0341) 551611</p>
+        </div>
+        <div class="col-lg-3 col-6">
+            <h6>Navigasi Halaman</h6>
+            <a th:href="@{/pengajuan}">Katalog Fasilitas</a>
+            <a th:href="@{/pengajuan/tambah}">Formulir Sewa</a>
+            <a th:href="@{/pengajuan}">Pelacakan Status</a>
+            <a th:href="@{/pengajuan}">Pembayaran Digital</a>
+        </div>
+        <div class="col-lg-3 col-6">
+            <h6>Portal Pengguna</h6>
+            <a th:href="@{/pengajuan}">Login SSO UB</a>
+            <a th:href="@{/pengajuan}">Akun Peminjam Luar</a>
+            <a th:href="@{/pengajuan}">Dashboard Pejabat</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div>&copy; 2026 Universitas Brawijaya. Sistem Informasi Penyewaan Aset (SIPERSET UB).</div>
+        <div class="text-muted">Direktorat Tata Usaha dan Kerumahtanggaan (DTUK)</div>
+    </div>
+</footer>
+
+</body>
+</html>
