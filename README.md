@@ -6,7 +6,7 @@
 [![H2 Database](https://img.shields.io/badge/Database-H2_In--Memory-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.h2database.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.2-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
-SIPERSET UB adalah platform web berbasis **Spring Boot & Thymeleaf** yang dirancang untuk memodernisasi dan mendigitalisasi birokrasi peminjaman dan penyewaan aset/fasilitas di lingkungan Universitas Brawijaya. Proyek ini mengimplementasikan alur bisnis berjenjang, validasi jadwal anti-bentrok, penghitungan subsidi otomatis, drag-and-drop berkas dokumen, serta antarmuka *High-Fidelity* yang presisi mengacu pada standar desain Figma.
+SIPERSET UB adalah platform web berbasis **Spring Boot & Thymeleaf** yang dirancang untuk memodernisasi dan mendigitalisasi birokrasi peminjaman dan penyewaan aset/fasilitas di lingkungan Universitas Brawijaya. Proyek ini mengimplementasikan alur bisnis berjenjang, validasi jadwal anti-bentrok, penghitungan subsidi otomatis, drag-and-drop berkas dokumen.
 
 ---
 
