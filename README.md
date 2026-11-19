@@ -6,7 +6,7 @@
 [![H2 Database](https://img.shields.io/badge/Database-H2_In--Memory-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.h2database.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.2-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
-SIPERSET UB adalah platform web berbasis **Spring Boot & Thymeleaf** yang dirancang untuk memodernisasi dan mendigitalisasi birokrasi peminjaman dan penyewaan aset/fasilitas di lingkungan Universitas Brawijaya. Proyek ini mengimplementasikan alur bisnis berjenjang, validasi jadwal anti-bentrok, penghitungan subsidi otomatis.
+SIPERSET UB adalah platform web berbasis **Spring Boot & Thymeleaf** yang dirancang untuk memodernisasi dan mendigitalisasi birokrasi peminjaman dan penyewaan aset/fasilitas di lingkungan Universitas Brawijaya. Proyek ini mengimplementasikan alur bisnis berjenjang, validasi jadwal anti-bentrok, penghitungan subsidi otomatis, drag-and-drop berkas dokumen.
 
 ---
 
@@ -14,30 +14,31 @@ SIPERSET UB adalah platform web berbasis **Spring Boot & Thymeleaf** yang diranc
 
 ```text
 siperset/
+├── .github/                                  # Direktori konfigurasi & automasi GitHub
 ├── .mvn/
 │   └── wrapper/
-│       └── maven-wrapper.properties        # Konfigurasi Maven Wrapper
+│       └── maven-wrapper.properties        # Konfigurasi versi Maven Wrapper
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/siperset/
 │   │   │   ├── controller/
-│   │   │   │   ├── HomeController.java       # Routing root (redirect otomatis ke form)
-│   │   │   │   └── PengajuanController.java  # Endpoint form pengajuan, simpan, tracking, & API
+│   │   │   │   ├── HomeController.java       # Routing root (/) langsung redirect ke form pengajuan
+│   │   │   │   └── PengajuanController.java  # Handler form sewa, submit data, pelacakan, & REST API
 │   │   │   ├── model/
 │   │   │   │   ├── Aset.java                 # Entitas fasilitas kampus & tarif sewa
 │   │   │   │   ├── Dokumen.java              # Entitas berkas persyaratan (PDF)
-│   │   │   │   ├── JadwalAset.java           # Entitas penguncian jadwal (status: Dipesan)
+│   │   │   │   ├── JadwalAset.java           # Entitas slot jadwal fasilitas (status: Dipesan)
 │   │   │   │   ├── Pengajuan.java            # Entitas utama transaksi peminjaman
 │   │   │   │   └── Persetujuan.java          # Entitas alur persetujuan berjenjang
-│   │   │   ├── repository/                   # Spring Data JPA Repositories
+│   │   │   ├── repository/                   # Spring Data JPA Data Access Object (DAO)
 │   │   │   │   ├── AsetRepository.java
 │   │   │   │   ├── DokumenRepository.java
-│   │   │   │   ├── JadwalAsetRepository.java # Query deteksi jadwal bentrok
+│   │   │   │   ├── JadwalAsetRepository.java # Query penentu ketersediaan jadwal anti-bentrok
 │   │   │   │   ├── PengajuanRepository.java
 │   │   │   │   └── PersetujuanRepository.java
 │   │   │   ├── service/
-│   │   │   │   └── PengajuanService.java     # Logika bisnis, validasi, kalkulasi, & seeding data
-│   │   │   └── SipersetApplication.java      # Main class Spring Boot
+│   │   │   │   └── PengajuanService.java     # Logika bisnis, validasi, kalkulasi, & seeding 6 aset
+│   │   │   └── SipersetApplication.java      # Entry point aplikasi Spring Boot
 │   │   └── resources/
 │   │       ├── static/
 │   │       │   └── images/
@@ -46,14 +47,20 @@ siperset/
 │   │       │   └── Pengajuan/
 │   │       │       ├── form-pengajuan.html   # Halaman formulir wizard 4 langkah (Figma)
 │   │       │       └── hasil.html            # Halaman tracking & log database (Figma)
-│   │       └── application.properties        # Konfigurasi server, multipart file, & H2
+│   │       └── application.properties        # Konfigurasi database H2, port, & upload multipart
 │   └── test/
 │       └── java/com/example/siperset/
 │           └── SipersetApplicationTests.java # Unit testing konteks Spring Boot
-├── mvnw                                      # Script wrapper Linux/macOS
-├── mvnw.cmd                                  # Script wrapper Windows
+├── dummy berkas 1.pdf                        # Berkas PDF dummy 1 (untuk uji coba upload proposal)
+├── dummy berkas 2.pdf                        # Berkas PDF dummy 2 (untuk uji coba upload surat dekanat)
+├── Universitas Brawijaya (UB) Logo - Colored - 254x256 - zonalogo.com.png # Asset gambar logo resmi UB (resolusi tinggi)
+├── .gitattributes
+├── .gitignore
+├── HELP.md                                   # Dokumentasi bawaan Spring Boot
+├── mvnw                                      # Script Maven Wrapper untuk Linux/macOS
+├── mvnw.cmd                                  # Script Maven Wrapper untuk Windows (PowerShell/CMD)
 ├── pom.xml                                   # Manajemen dependensi Maven
-└── README.md
+└── README.md                                 # Dokumentasi utama proyek
 ```
 
 ---
@@ -73,7 +80,7 @@ Sebelum menjalankan aplikasi, pastikan komputer Anda telah terpasang:
 Buka terminal (PowerShell / Git Bash / Command Prompt) dan jalankan:
 ```bash
 git clone https://github.com/arrafi-byte/siperset-APS.git
-cd siperset-APS/siperset
+cd siperset-APS
 ```
 
 ### 2. Menjalankan Aplikasi
@@ -109,11 +116,11 @@ Setelah aplikasi berhasil berjalan dengan pesan `Tomcat started on port 8080 (ht
 | **H2 Database Console** | [`http://localhost:8080/h2-console`](http://localhost:8080/h2-console) | Konsol database in-memory (*JDBC URL:* `jdbc:h2:mem:db_siperset`, *Username:* `sa`, *Password:* [kosong]). |
 
 ### Alur Singkat Peminjaman:
-1. **Langkah 1:** Pilih salah satu dari 6 gedung kampus yang tersedia, pilih tanggal peminjaman, dan pilih kategori pemohon (*Civitas Academica* otomatis mendapatkan diskon 30%).
-2. **Langkah 2:** Isi data pemohon penanggung jawab kegiatan.
-3. **Langkah 3:** *Drag & drop* atau klik untuk mengunggah berkas proposal resmi berformat PDF.
-4. **Langkah 4:** Tinjau rincian estimasi biaya, lalu klik **Kirim Pengajuan Sewa**.
-5. Sistem akan mengunci jadwal fasilitas menjadi **Dipesan** dan menampilkan ID registrasi resmi di halaman pelacakan.
+1. **Langkah 1:** Pilih salah satu dari 6 gedung kampus yang tersedia, tentukan rentang tanggal peminjaman (status jadwal akan dicek real-time), dan pilih kategori pemohon.
+2. **Langkah 2:** Isi identitas lengkap pemohon dan deskripsi acara.
+3. **Langkah 3:** *Drag & drop* atau klik untuk mengunggah dokumen proposal resmi berformat PDF (dapat menggunakan `dummy berkas 1.pdf` dan `dummy berkas 2.pdf` yang sudah tersedia di root proyek).
+4. **Langkah 4:** Tinjau rincian estimasi biaya yang telah dikurangi subsidi, lalu klik **Kirim Pengajuan Sewa**.
+5. Sistem akan mengunci jadwal fasilitas menjadi **Dipesan** dan menampilkan ID registrasi resmi di halaman pelacakan (*Tracking*).
 
 ---
 
@@ -124,4 +131,3 @@ Untuk memastikan seluruh modul, entitas, dan logika bisnis berjalan tanpa kendal
 .\mvnw.cmd test
 ```
 
----
