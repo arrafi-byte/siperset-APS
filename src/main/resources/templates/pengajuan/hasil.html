@@ -660,32 +660,75 @@
 
     <!-- TABEL LOG DATABASE H2 (Fitur Sementara untuk Pengujian & Verifikasi Entitas DPPL) -->
     <div class="db-log-card">
-        <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Log Database Real-time (Sementara) — Entitas Pengajuan &amp; Jadwal Terkunci</h6>
-        <div class="table-responsive">
-            <table class="table table-sm table-bordered align-middle mb-0 small">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID Jadwal</th>
-                        <th>Kode Aset</th>
-                        <th>ID Pengajuan</th>
-                        <th>Rentang Tanggal</th>
-                        <th>Status Slot</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="j : ${daftarJadwal}">
-                        <td th:text="${j.idJadwal}"></td>
-                        <td class="fw-bold" th:text="${j.idAset}"></td>
-                        <td th:text="${j.idPengajuan}"></td>
-                        <td th:text="${j.tanggalMulai + ' s/d ' + j.tanggalSelesai}"></td>
-                        <td>
-                            <span th:class="${j.statusKetersediaan == 'Dipesan' ? 'badge bg-danger' : 'badge bg-success'}"
-                                  th:text="${j.statusKetersediaan}">
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <h6 class="fw-bold mb-3" style="color: var(--ub-navy); font-size: 15px;">Log Database Real-time (Sementara) — Verifikasi 5 Entitas DPPL</h6>
+
+        <!-- 1. Tabel Pengajuan -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold small text-secondary">1. Tabel Entitas Pengajuan (Transaksi Aktif):</span>
+                <span class="badge bg-primary text-white" th:text="${daftarPengajuan.size() + ' Data'}"></span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID Pengajuan</th>
+                            <th>Kode Aset</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Selesai</th>
+                            <th>Status Pengajuan</th>
+                            <th>Total Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(daftarPengajuan)}">
+                            <td colspan="6" class="text-center text-muted py-2">Belum ada data transaksi pengajuan tersimpan.</td>
+                        </tr>
+                        <tr th:each="p : ${daftarPengajuan}">
+                            <td class="fw-bold" style="color: var(--ub-navy);" th:text="${p.idPengajuan}"></td>
+                            <td th:text="${p.idAset}"></td>
+                            <td th:text="${p.tanggalMulaiSewa}"></td>
+                            <td th:text="${p.tanggalSelesaiSewa}"></td>
+                            <td><span class="badge bg-success" th:text="${p.statusPengajuan}"></span></td>
+                            <td class="fw-bold" th:text="${'Rp ' + #numbers.formatDecimal(p.totalBiaya, 0, 'POINT', 0, 'COMMA')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Tabel Jadwal Aset -->
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold small text-secondary">2. Tabel Entitas Jadwal Aset (Slot Terkunci &amp; Tersedia):</span>
+                <span class="badge bg-danger text-white" th:text="${daftarJadwal.size() + ' Slot'}"></span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID Jadwal</th>
+                            <th>Kode Aset</th>
+                            <th>ID Pengajuan</th>
+                            <th>Rentang Tanggal</th>
+                            <th>Status Ketersediaan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="j : ${daftarJadwal}">
+                            <td th:text="${j.idJadwal}"></td>
+                            <td class="fw-bold" th:text="${j.idAset}"></td>
+                            <td th:text="${j.idPengajuan != null ? j.idPengajuan : '-'}"></td>
+                            <td th:text="${j.tanggalMulai + ' s/d ' + j.tanggalSelesai}"></td>
+                            <td>
+                                <span th:class="${j.statusKetersediaan == 'Dipesan' ? 'badge bg-danger' : 'badge bg-success'}"
+                                      th:text="${j.statusKetersediaan}">
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

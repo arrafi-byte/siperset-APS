@@ -44,7 +44,7 @@ siperset/
 │   │       │   └── images/
 │   │       │       └── logo-ub.png           # Aset visual logo resmi Universitas Brawijaya
 │   │       ├── templates/
-│   │       │   └── Pengajuan/
+│   │       │   └── pengajuan/
 │   │       │       ├── form-pengajuan.html   # Halaman formulir wizard 4 langkah (Figma)
 │   │       │       └── hasil.html            # Halaman tracking & log database (Figma)
 │   │       └── application.properties        # Konfigurasi database H2, port, & upload multipart

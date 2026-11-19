@@ -31,7 +31,9 @@ public class PengajuanController {
 
     @GetMapping("/tambah")
     public String tampilkanFormPengajuan(Model model) {
-        model.addAttribute("pengajuan", new Pengajuan());
+        if (!model.containsAttribute("pengajuan")) {
+            model.addAttribute("pengajuan", new Pengajuan());
+        }
         model.addAttribute("daftarAset", pengajuanService.getAllAset());
         return "pengajuan/form-pengajuan";
     }
@@ -45,6 +47,10 @@ public class PengajuanController {
                                  RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("daftarAset", pengajuanService.getAllAset());
+            String errorMsg = result.getAllErrors().stream()
+                    .map(org.springframework.context.support.DefaultMessageSourceResolvable::getDefaultMessage)
+                    .findFirst().orElse("Data formulir tidak lengkap atau tidak sesuai.");
+            model.addAttribute("pesanError", errorMsg);
             return "pengajuan/form-pengajuan";
         }
         try {
@@ -60,23 +66,74 @@ public class PengajuanController {
         }
     }
 
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public String handleMaxSizeException(org.springframework.web.multipart.MaxUploadSizeExceededException exc,
+                                         RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("pesanError", "Ukuran berkas dokumen melebihi batas maksimal 10 MB.");
+        return "redirect:/pengajuan/tambah";
+    }
+
     // Endpoint tambahan khusus untuk pengujian curl di Subbab 6.7 (JSON)
     @PostMapping("/api")
     @ResponseBody
     public ResponseEntity<Object> apiSubmit(@RequestBody Map<String, String> req) {
         try {
-            Pengajuan p = new Pengajuan();
-            p.setIdAset(req.get("idAset"));
-            p.setTanggalMulaiSewa(java.time.LocalDate.parse(req.get("tanggalMulai")));
-            p.setTanggalSelesaiSewa(java.time.LocalDate.parse(req.get("tanggalSelesai")));
+            String idAset = req.get("idAset");
+            String tglMulaiStr = req.get("tanggalMulai");
+            String tglSelesaiStr = req.get("tanggalSelesai");
+            String kategori = req.get("kategoriPemohon");
 
-            if (!pengajuanService.cekKetersediaan(p.getIdAset(), p.getTanggalMulaiSewa(), p.getTanggalSelesaiSewa())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Map.of("status", "gagal", "pesan", "Jadwal aset pada tanggal tersebut sudah terisi"));
+            if (idAset == null || idAset.trim().isEmpty() || tglMulaiStr == null || tglSelesaiStr == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "gagal", "pesan", "Data isian belum lengkap (idAset, tanggalMulai, dan tanggalSelesai wajib diisi)."));
             }
-            return ResponseEntity.ok(Map.of("status", "berhasil", "idAset", p.getIdAset(), "statusJadwal", "Dipesan"));
+
+            java.time.LocalDate mulai;
+            java.time.LocalDate selesai;
+            try {
+                mulai = java.time.LocalDate.parse(tglMulaiStr);
+                selesai = java.time.LocalDate.parse(tglSelesaiStr);
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "gagal", "pesan", "Format tanggal tidak valid. Gunakan format YYYY-MM-DD."));
+            }
+
+            // Alur Gagal A2: Tanggal selesai mendahului tanggal mulai
+            if (selesai.isBefore(mulai)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "gagal", "pesan", "Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa."));
+            }
+
+            // Alur Gagal A1: Ketersediaan Jadwal Anti-Bentrok
+            if (!pengajuanService.cekKetersediaan(idAset, mulai, selesai)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("status", "gagal", "pesan", "Jadwal aset pada tanggal tersebut sudah terisi (Dipesan). Silakan pilih tanggal lain."));
+            }
+
+            Pengajuan p = new Pengajuan();
+            p.setIdAset(idAset);
+            p.setTanggalMulaiSewa(mulai);
+            p.setTanggalSelesaiSewa(selesai);
+
+            // Simpan transaksi lengkap ke database H2
+            Pengajuan tersimpan = pengajuanService.submitPengajuanApi(p, kategori);
+
+            return ResponseEntity.ok(Map.of(
+                    "status", "berhasil",
+                    "idPengajuan", tersimpan.getIdPengajuan(),
+                    "idAset", tersimpan.getIdAset(),
+                    "statusJadwal", "Dipesan",
+                    "totalBiaya", tersimpan.getTotalBiaya()
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("status", "gagal", "pesan", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("status", "gagal", "pesan", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("status", "gagal", "pesan", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "pesan", e.getMessage()));
         }
     }
 }

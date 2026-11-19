@@ -32,6 +32,16 @@ public class PengajuanService {
         asetRepository.save(new Aset("AST-05", "Bus Eksekutif Pariwisata UB", 45, 2200000.0));
         asetRepository.save(new Aset("AST-06", "Gazebo Raden Wijaya", 100, 750000.0));
 
+        // Satu pengajuan lama dummy untuk menjaga integritas foreign key
+        Pengajuan dummyLama = new Pengajuan();
+        dummyLama.setIdPengajuan("PGJ-LAMA");
+        dummyLama.setIdAset("AST-01");
+        dummyLama.setTanggalMulaiSewa(LocalDate.of(2026, 12, 10));
+        dummyLama.setTanggalSelesaiSewa(LocalDate.of(2026, 12, 12));
+        dummyLama.setStatusPengajuan("Disetujui");
+        dummyLama.setTotalBiaya(75000000.0);
+        pengajuanRepository.save(dummyLama);
+
         // Satu jadwal yang sudah "Dipesan" untuk menguji Alur Gagal A1 (Jadwal Bentrok)
         jadwalAsetRepository.save(new JadwalAset(
                 "JDW-001", "AST-01", "PGJ-LAMA",
@@ -75,6 +85,16 @@ public class PengajuanService {
 
     @Transactional
     public Pengajuan submitPengajuan(Pengajuan pengajuan, MultipartFile berkasPdf, String kategoriPemohon) {
+        if (pengajuan == null) {
+            throw new IllegalArgumentException("Data formulir pengajuan tidak boleh kosong.");
+        }
+        if (pengajuan.getIdAset() == null || pengajuan.getIdAset().trim().isEmpty()) {
+            throw new IllegalArgumentException("Fasilitas aset wajib dipilih.");
+        }
+        if (pengajuan.getTanggalMulaiSewa() == null || pengajuan.getTanggalSelesaiSewa() == null) {
+            throw new IllegalArgumentException("Tanggal mulai sewa dan tanggal selesai sewa wajib diisi.");
+        }
+
         // 1. Validasi Tanggal (Alur Gagal A2)
         if (pengajuan.getTanggalSelesaiSewa().isBefore(pengajuan.getTanggalMulaiSewa())) {
             throw new IllegalArgumentException("Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa.");
@@ -117,6 +137,47 @@ public class PengajuanService {
         jadwalAsetRepository.save(jadwal);
 
         // 7. Buat Antrean Persetujuan Baru dengan status "Menunggu"
+        Persetujuan persetujuan = new Persetujuan("APR-" + idBaru.substring(4), idBaru, "Humas & Kepala DTUK", "Menunggu");
+        persetujuanRepository.save(persetujuan);
+
+        return pengajuan;
+    }
+
+    @Transactional
+    public Pengajuan submitPengajuanApi(Pengajuan pengajuan, String kategoriPemohon) {
+        if (pengajuan == null) {
+            throw new IllegalArgumentException("Data pengajuan tidak boleh kosong.");
+        }
+        if (pengajuan.getIdAset() == null || pengajuan.getIdAset().trim().isEmpty()) {
+            throw new IllegalArgumentException("Fasilitas aset wajib dipilih.");
+        }
+        if (pengajuan.getTanggalMulaiSewa() == null || pengajuan.getTanggalSelesaiSewa() == null) {
+            throw new IllegalArgumentException("Tanggal mulai sewa dan tanggal selesai sewa wajib diisi.");
+        }
+        if (pengajuan.getTanggalSelesaiSewa().isBefore(pengajuan.getTanggalMulaiSewa())) {
+            throw new IllegalArgumentException("Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa.");
+        }
+
+        if (!cekKetersediaan(pengajuan.getIdAset(), pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa())) {
+            throw new IllegalStateException("Jadwal aset pada tanggal tersebut sudah terisi (Dipesan). Silakan pilih tanggal lain.");
+        }
+
+        Aset aset = asetRepository.findById(pengajuan.getIdAset())
+                .orElseThrow(() -> new IllegalArgumentException("Aset tidak ditemukan."));
+
+        String idBaru = "PGJ-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
+        pengajuan.setIdPengajuan(idBaru);
+        pengajuan.setStatusPengajuan("Diajukan");
+        pengajuan.setTotalBiaya(hitungTotalBiaya(aset.getTarifSewa(), pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa(), kategoriPemohon));
+        pengajuanRepository.save(pengajuan);
+
+        Dokumen dok = new Dokumen("DOK-" + idBaru.substring(4), idBaru, "/uploads/api-dummy.pdf", "Menunggu");
+        dokumenRepository.save(dok);
+
+        JadwalAset jadwal = new JadwalAset("JDW-" + idBaru.substring(4), aset.getIdAset(), idBaru,
+                pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa(), "Dipesan");
+        jadwalAsetRepository.save(jadwal);
+
         Persetujuan persetujuan = new Persetujuan("APR-" + idBaru.substring(4), idBaru, "Humas & Kepala DTUK", "Menunggu");
         persetujuanRepository.save(persetujuan);
 
