@@ -73,7 +73,7 @@ public class PengajuanController {
         return "redirect:/pengajuan/tambah";
     }
 
-    // Endpoint tambahan khusus untuk pengujian curl di Subbab 6.7 (JSON)
+    // Endpoint tambahan untuk pengujian curl di Subbab 6.7 
     @PostMapping("/api")
     @ResponseBody
     public ResponseEntity<Object> apiSubmit(@RequestBody Map<String, String> req) {
@@ -98,13 +98,13 @@ public class PengajuanController {
                         .body(Map.of("status", "gagal", "pesan", "Format tanggal tidak valid. Gunakan format YYYY-MM-DD."));
             }
 
-            // Alur Gagal A2: Tanggal selesai mendahului tanggal mulai
+            // Alur Tanggal selesai mendahului tanggal mulai
             if (selesai.isBefore(mulai)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("status", "gagal", "pesan", "Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa."));
             }
 
-            // Alur Gagal A1: Ketersediaan Jadwal Anti-Bentrok
+            // Alur Ketersediaan Jadwal Anti-Bentrok
             if (!pengajuanService.cekKetersediaan(idAset, mulai, selesai)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of("status", "gagal", "pesan", "Jadwal aset pada tanggal tersebut sudah terisi (Dipesan). Silakan pilih tanggal lain."));
@@ -115,7 +115,7 @@ public class PengajuanController {
             p.setTanggalMulaiSewa(mulai);
             p.setTanggalSelesaiSewa(selesai);
 
-            // Simpan transaksi lengkap ke database H2
+            // Simpan transaksi ke database H2
             Pengajuan tersimpan = pengajuanService.submitPengajuanApi(p, kategori);
 
             return ResponseEntity.ok(Map.of(
@@ -130,6 +130,9 @@ public class PengajuanController {
                     .body(Map.of("status", "gagal", "pesan", e.getMessage()));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("status", "gagal", "pesan", e.getMessage()));
+        } catch (java.util.NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("status", "gagal", "pesan", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

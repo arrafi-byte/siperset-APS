@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -22,7 +23,7 @@ public class PengajuanService {
     @Autowired private DokumenRepository dokumenRepository;
     @Autowired private PersetujuanRepository persetujuanRepository;
 
-    // Seeder Data Awal Otomatis saat aplikasi dijalankan (Sesuai Katalog Figma)
+    // Seeder Data Awal
     @PostConstruct
     public void initDataAwal() {
         asetRepository.save(new Aset("AST-01", "Gedung Samantha Krida (SAMKRI)", 4500, 25000000.0));
@@ -32,7 +33,7 @@ public class PengajuanService {
         asetRepository.save(new Aset("AST-05", "Bus Eksekutif Pariwisata UB", 45, 2200000.0));
         asetRepository.save(new Aset("AST-06", "Gazebo Raden Wijaya", 100, 750000.0));
 
-        // Satu pengajuan lama dummy untuk menjaga integritas foreign key
+        // Satu pengajuan lama dummy
         Pengajuan dummyLama = new Pengajuan();
         dummyLama.setIdPengajuan("PGJ-LAMA");
         dummyLama.setIdAset("AST-01");
@@ -95,12 +96,12 @@ public class PengajuanService {
             throw new IllegalArgumentException("Tanggal mulai sewa dan tanggal selesai sewa wajib diisi.");
         }
 
-        // 1. Validasi Tanggal (Alur Gagal A2)
+        // 1. Validasi Tanggal
         if (pengajuan.getTanggalSelesaiSewa().isBefore(pengajuan.getTanggalMulaiSewa())) {
             throw new IllegalArgumentException("Tanggal selesai sewa tidak boleh mendahului tanggal mulai sewa.");
         }
 
-        // 2. Validasi Berkas PDF maks 10 MB (Alur Gagal A3)
+        // 2. Validasi Berkas PDF maks 10 MB 
         if (berkasPdf == null || berkasPdf.isEmpty()) {
             throw new IllegalArgumentException("Berkas dokumen persyaratan (PDF) wajib diunggah.");
         }
@@ -112,14 +113,14 @@ public class PengajuanService {
             throw new IllegalArgumentException("Ukuran berkas dokumen melebihi batas maksimal 10 MB.");
         }
 
-        // 3. Cek Ketersediaan Jadwal Anti-Bentrok (Alur Gagal A1)
+        // 3. Cek Ketersediaan Jadwal Anti-Bentrok 
         if (!cekKetersediaan(pengajuan.getIdAset(), pengajuan.getTanggalMulaiSewa(), pengajuan.getTanggalSelesaiSewa())) {
             throw new IllegalStateException("Jadwal aset pada tanggal tersebut sudah terisi (Dipesan). Silakan pilih tanggal lain.");
         }
 
-        // 4. Hitung Total Biaya & Simpan Pengajuan (Alur Utama U7)
+        // 4. Hitung Total Biaya & Simpan Pengajuan
         Aset aset = asetRepository.findById(pengajuan.getIdAset())
-                .orElseThrow(() -> new IllegalArgumentException("Aset tidak ditemukan."));
+                .orElseThrow(() -> new NoSuchElementException("Aset tidak ditemukan."));
 
         String idBaru = "PGJ-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
         pengajuan.setIdPengajuan(idBaru);
@@ -163,7 +164,7 @@ public class PengajuanService {
         }
 
         Aset aset = asetRepository.findById(pengajuan.getIdAset())
-                .orElseThrow(() -> new IllegalArgumentException("Aset tidak ditemukan."));
+                .orElseThrow(() -> new java.util.NoSuchElementException("Aset tidak ditemukan."));
 
         String idBaru = "PGJ-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
         pengajuan.setIdPengajuan(idBaru);
